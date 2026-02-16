@@ -1,0 +1,4470 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALANG — The Fire Never Dies 🔥</title>
+    <style>
+        /* ============================================
+           FONT IMPORTS & BASE RESET
+           ============================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            cursor: default;
+            transition: filter 0.3s ease;
+        }
+
+        body.rage-mode {
+            animation: rageShake 0.05s infinite;
+        }
+
+        body.rage-mode::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.15);
+            pointer-events: none;
+            z-index: 99999;
+            animation: ragePulse 0.5s infinite;
+        }
+
+        /* ============================================
+           SCROLLBAR CUSTOM
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff4400, #ff0000, #cc0000);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ff6600, #ff2200, #ee0000);
+        }
+
+        /* ============================================
+           LOADING SCREEN
+           ============================================ */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-fire-container {
+            position: relative;
+            width: 120px;
+            height: 160px;
+            margin-bottom: 40px;
+        }
+
+        .loading-flame {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(ellipse at bottom, #ff6600 0%, #ff4400 30%, #ff0000 60%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: loadingFlame 0.8s infinite alternate;
+            filter: blur(2px);
+        }
+
+        .loading-flame::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100px;
+            background: radial-gradient(ellipse at bottom, #ffaa00 0%, #ff6600 40%, #ff2200 70%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: loadingFlameInner 0.6s infinite alternate;
+        }
+
+        .loading-flame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 60px;
+            background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffcc00 30%, #ff8800 60%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: loadingFlameCore 0.4s infinite alternate;
+        }
+
+        .loading-ember {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6600;
+            border-radius: 50%;
+            animation: loadingEmber 2s infinite;
+            box-shadow: 0 0 6px #ff4400;
+        }
+
+        .loading-ember:nth-child(2) {
+            left: 30%;
+            animation-delay: 0.3s;
+            animation-duration: 1.8s;
+        }
+
+        .loading-ember:nth-child(3) {
+            left: 70%;
+            animation-delay: 0.6s;
+            animation-duration: 2.2s;
+        }
+
+        .loading-ember:nth-child(4) {
+            left: 50%;
+            animation-delay: 0.9s;
+            animation-duration: 1.5s;
+        }
+
+        .loading-ember:nth-child(5) {
+            left: 20%;
+            animation-delay: 1.2s;
+            animation-duration: 2.5s;
+        }
+
+        .loading-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 12px;
+            color: #ff4400;
+            text-shadow: 0 0 20px #ff4400, 0 0 40px #ff0000;
+            animation: loadingTextPulse 1.5s infinite;
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff4400, #ff8800, #ffaa00);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #ff4400;
+        }
+
+        .loading-percentage {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            color: #ff6600;
+            margin-top: 10px;
+            letter-spacing: 4px;
+        }
+
+        /* ============================================
+           KEYFRAME ANIMATIONS - LOADING
+           ============================================ */
+        @keyframes loadingFlame {
+            0% {
+                height: 80px;
+                width: 60px;
+                opacity: 0.8;
+            }
+            100% {
+                height: 100px;
+                width: 50px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes loadingFlameInner {
+            0% {
+                height: 100px;
+                width: 40px;
+            }
+            100% {
+                height: 120px;
+                width: 35px;
+            }
+        }
+
+        @keyframes loadingFlameCore {
+            0% {
+                height: 60px;
+                width: 20px;
+            }
+            100% {
+                height: 80px;
+                width: 15px;
+            }
+        }
+
+        @keyframes loadingEmber {
+            0% {
+                bottom: 60px;
+                opacity: 1;
+                transform: translateX(0);
+            }
+            100% {
+                bottom: 160px;
+                opacity: 0;
+                transform: translateX(20px);
+            }
+        }
+
+        @keyframes loadingTextPulse {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ============================================
+           CANVAS OVERLAYS
+           ============================================ */
+        #fire-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #ash-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        #mouse-fire-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* ============================================
+           LIGHTNING FLASH
+           ============================================ */
+        #lightning-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99998;
+            transition: opacity 0.05s;
+        }
+
+        /* ============================================
+           SMOKE OVERLAY
+           ============================================ */
+        .smoke-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            overflow: hidden;
+        }
+
+        .smoke-particle {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 100, 100, 0.1) 0%, transparent 70%);
+            animation: smokeFloat 15s infinite;
+            opacity: 0;
+        }
+
+        .smoke-particle:nth-child(1) {
+            left: 10%;
+            bottom: -200px;
+            animation-delay: 0s;
+            animation-duration: 12s;
+        }
+
+        .smoke-particle:nth-child(2) {
+            left: 30%;
+            bottom: -200px;
+            animation-delay: 3s;
+            animation-duration: 14s;
+        }
+
+        .smoke-particle:nth-child(3) {
+            left: 50%;
+            bottom: -200px;
+            animation-delay: 5s;
+            animation-duration: 16s;
+        }
+
+        .smoke-particle:nth-child(4) {
+            left: 70%;
+            bottom: -200px;
+            animation-delay: 2s;
+            animation-duration: 13s;
+        }
+
+        .smoke-particle:nth-child(5) {
+            left: 90%;
+            bottom: -200px;
+            animation-delay: 7s;
+            animation-duration: 15s;
+        }
+
+        .smoke-particle:nth-child(6) {
+            left: 20%;
+            bottom: -200px;
+            animation-delay: 4s;
+            animation-duration: 11s;
+        }
+
+        .smoke-particle:nth-child(7) {
+            left: 60%;
+            bottom: -200px;
+            animation-delay: 6s;
+            animation-duration: 17s;
+        }
+
+        .smoke-particle:nth-child(8) {
+            left: 80%;
+            bottom: -200px;
+            animation-delay: 1s;
+            animation-duration: 13s;
+        }
+
+        @keyframes smokeFloat {
+            0% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.15;
+            }
+            50% {
+                opacity: 0.08;
+                transform: translateY(-50vh) scale(2) rotate(180deg);
+            }
+            100% {
+                transform: translateY(-100vh) scale(3) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================
+           OPENING DRAMATIC SCREEN
+           ============================================ */
+        #opening-screen {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #000000 0%, #0a0000 50%, #1a0500 100%);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .opening-bg-fire {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(0deg, rgba(255, 68, 0, 0.3) 0%, rgba(255, 34, 0, 0.1) 50%, transparent 100%);
+            animation: bgFirePulse 3s infinite alternate;
+        }
+
+        @keyframes bgFirePulse {
+            0% {
+                opacity: 0.5;
+                height: 40%;
+            }
+            100% {
+                opacity: 0.8;
+                height: 45%;
+            }
+        }
+
+        .opening-content {
+            text-align: center;
+            z-index: 5;
+            position: relative;
+        }
+
+        .opening-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            letter-spacing: 8px;
+            color: #ff6600;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 1s 0.5s forwards;
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+        }
+
+        .opening-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(80px, 15vw, 200px);
+            color: transparent;
+            background: linear-gradient(180deg, #ffffff 0%, #ff8800 30%, #ff4400 60%, #cc0000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            line-height: 1;
+            margin: 20px 0;
+            opacity: 0;
+            animation: titleReveal 2s 1s forwards;
+            filter: drop-shadow(0 0 30px rgba(255, 68, 0, 0.8));
+            position: relative;
+        }
+
+        .opening-title::after {
+            content: 'GALANG';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(180deg, #ffffff 0%, #ff8800 30%, #ff4400 60%, #cc0000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: blur(20px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .opening-tagline {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(16px, 3vw, 24px);
+            color: #cc4400;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 1s 2s forwards;
+            text-shadow: 0 0 15px rgba(204, 68, 0, 0.6);
+        }
+
+        .opening-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff4400, #ff8800, #ff4400, transparent);
+            margin: 30px auto;
+            animation: lineExpand 2s 2.5s forwards;
+            box-shadow: 0 0 10px #ff4400;
+        }
+
+        .opening-quote {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(14px, 2vw, 20px);
+            color: #888;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 1s 3s forwards;
+            line-height: 1.6;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeInUp 1s 4s forwards;
+        }
+
+        .scroll-indicator span {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: #ff4400;
+            text-transform: uppercase;
+        }
+
+        .scroll-arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid #ff4400;
+            border-bottom: 2px solid #ff4400;
+            transform: rotate(45deg);
+            animation: scrollBounce 2s infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% {
+                transform: rotate(45deg) translateY(0);
+                opacity: 0.3;
+            }
+            50% {
+                transform: rotate(45deg) translateY(10px);
+                opacity: 1;
+            }
+        }
+
+        /* ============================================
+           WARRIOR SILHOUETTE
+           ============================================ */
+        .warrior-silhouette {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            opacity: 0;
+            animation: warriorReveal 3s 1.5s forwards;
+        }
+
+        .warrior-body {
+            position: relative;
+            width: 80px;
+            height: 200px;
+        }
+
+        .warrior-head {
+            width: 30px;
+            height: 30px;
+            background: #0a0a0a;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .warrior-torso {
+            width: 50px;
+            height: 70px;
+            background: #0a0a0a;
+            margin: 5px auto 0;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+
+        .warrior-legs {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .warrior-leg {
+            width: 18px;
+            height: 80px;
+            background: #0a0a0a;
+        }
+
+        .warrior-sword {
+            position: absolute;
+            right: -30px;
+            top: 20px;
+            width: 4px;
+            height: 100px;
+            background: linear-gradient(180deg, #666, #333);
+            transform: rotate(-20deg);
+            transform-origin: bottom center;
+        }
+
+        .warrior-sword::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 15px solid #666;
+        }
+
+        .warrior-sword::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+        }
+
+        .warrior-cape {
+            position: absolute;
+            top: 35px;
+            left: -10px;
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(180deg, #1a0000, #0a0000);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 60% 80%, 0% 100%);
+            animation: capeFlow 3s infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        @keyframes capeFlow {
+            0%, 100% {
+                clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 60% 80%, 0% 100%);
+            }
+            50% {
+                clip-path: polygon(20% 0%, 80% 0%, 110% 95%, 55% 85%, -10% 100%);
+            }
+        }
+
+        @keyframes warriorReveal {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        #hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #1a0500 0%, #0a0a0a 30%, #0a0000 70%, #1a0500 100%);
+            overflow: hidden;
+            z-index: 10;
+            padding: 80px 20px;
+        }
+
+        .hero-fire-left,
+        .hero-fire-right {
+            position: absolute;
+            top: 0;
+            width: 30%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hero-fire-left {
+            left: 0;
+            background: linear-gradient(90deg, rgba(255, 34, 0, 0.1) 0%, transparent 100%);
+        }
+
+        .hero-fire-right {
+            right: 0;
+            background: linear-gradient(-90deg, rgba(255, 34, 0, 0.1) 0%, transparent 100%);
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            z-index: 5;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 30px;
+            border: 1px solid #ff4400;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            letter-spacing: 6px;
+            color: #ff4400;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 68, 0, 0.2), transparent);
+            animation: badgeShine 3s infinite;
+        }
+
+        @keyframes badgeShine {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .hero-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(60px, 12vw, 150px);
+            background: linear-gradient(180deg, #ffffff 0%, #ff8800 40%, #ff4400 70%, #cc0000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 40px rgba(255, 68, 0, 0.6));
+            animation: heroNameGlow 3s infinite alternate;
+        }
+
+        @keyframes heroNameGlow {
+            0% {
+                filter: drop-shadow(0 0 40px rgba(255, 68, 0, 0.6));
+            }
+            100% {
+                filter: drop-shadow(0 0 60px rgba(255, 68, 0, 0.9));
+            }
+        }
+
+        .hero-epithet {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(20px, 4vw, 36px);
+            color: #ff6600;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+        }
+
+        .hero-description {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(16px, 2.5vw, 22px);
+            color: #aaa;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            color: #ff4400;
+            text-shadow: 0 0 20px rgba(255, 68, 0, 0.5);
+        }
+
+        .stat-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           HEARTBEAT COUNTER
+           ============================================ */
+        .heartbeat-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(10, 0, 0, 0.8);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+        }
+
+        .heartbeat-icon {
+            font-size: 20px;
+            animation: heartbeatPulse 1s infinite;
+            color: #ff0000;
+        }
+
+        .heartbeat-count {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            color: #ff4400;
+            letter-spacing: 2px;
+        }
+
+        .heartbeat-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @keyframes heartbeatPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            15% {
+                transform: scale(1.3);
+            }
+            30% {
+                transform: scale(1);
+            }
+            45% {
+                transform: scale(1.2);
+            }
+            60% {
+                transform: scale(1);
+            }
+        }
+
+        /* ============================================
+           RAGE MODE BUTTON
+           ============================================ */
+        .rage-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #330000, #660000);
+            border: 2px solid #ff0000;
+            color: #ff4400;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: fixed;
+        }
+
+        .rage-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .rage-btn:hover::before {
+            left: 100%;
+        }
+
+        .rage-btn:hover {
+            background: linear-gradient(135deg, #660000, #990000);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        .rage-btn.active {
+            background: linear-gradient(135deg, #990000, #cc0000);
+            animation: rageBtnPulse 0.5s infinite;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+        }
+
+        @keyframes rageBtnPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(255, 0, 0, 0.9);
+            }
+        }
+
+        /* ============================================
+           BANGKIT LAGI BUTTON
+           ============================================ */
+        .bangkit-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #1a0a00, #331a00);
+            border: 2px solid #ff6600;
+            color: #ff8800;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bangkit-btn:hover {
+            background: linear-gradient(135deg, #331a00, #663300);
+            box-shadow: 0 0 30px rgba(255, 102, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* ============================================
+           SECTION DIVIDERS
+           ============================================ */
+        .section-divider {
+            width: 100%;
+            height: 100px;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .divider-fire {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(0deg, rgba(255, 68, 0, 0.4) 0%, rgba(255, 34, 0, 0.1) 50%, transparent 100%);
+            animation: dividerFirePulse 2s infinite alternate;
+        }
+
+        .divider-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff4400, transparent);
+            box-shadow: 0 0 10px #ff4400;
+        }
+
+        @keyframes dividerFirePulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        /* ============================================
+           PERJALANAN HIDUP SECTION
+           ============================================ */
+        #journey-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 20px;
+            background: linear-gradient(180deg, #0a0000 0%, #0a0a0a 20%, #0a0a0a 80%, #0a0000 100%);
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 120px;
+            color: rgba(255, 68, 0, 0.1);
+            line-height: 1;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(40px, 8vw, 80px);
+            background: linear-gradient(180deg, #ffffff, #ff8800, #ff4400);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-top: -40px;
+            position: relative;
+            filter: drop-shadow(0 0 20px rgba(255, 68, 0, 0.5));
+        }
+
+        .section-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            color: #666;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* Timeline */
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent, #ff4400, #ff8800, #ff4400, transparent);
+            box-shadow: 0 0 10px rgba(255, 68, 0, 0.3);
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 45%;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(20, 5, 0, 0.8), rgba(10, 10, 10, 0.9));
+            border: 1px solid rgba(255, 68, 0, 0.2);
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 5%;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 50%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            width: 20px;
+            height: 20px;
+            background: #ff4400;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 68, 0, 0.6);
+            z-index: 2;
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -35px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -35px;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 46px;
+            width: 25px;
+            height: 2px;
+            background: #ff4400;
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            right: -25px;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -25px;
+        }
+
+        .timeline-era {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            color: #ff6600;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            color: #ff4400;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 68, 0, 0.3);
+        }
+
+        .timeline-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            color: #999;
+            line-height: 1.8;
+        }
+
+        .timeline-icon {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        /* ============================================
+           MOTIVASI SECTION
+           ============================================ */
+        #motivasi-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 20px;
+            background: linear-gradient(180deg, #0a0000 0%, #1a0500 30%, #0a0a0a 70%, #0a0000 100%);
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .motivasi-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .motivasi-card {
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(30, 5, 0, 0.6), rgba(10, 10, 10, 0.8));
+            border: 1px solid rgba(255, 68, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .motivasi-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .motivasi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff4400, transparent);
+        }
+
+        .motivasi-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(255, 68, 0, 0.1), transparent);
+        }
+
+        .motivasi-card:hover {
+            border-color: rgba(255, 68, 0, 0.4);
+            box-shadow: 0 0 30px rgba(255, 68, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .motivasi-emoji {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .motivasi-quote {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .motivasi-quote::before {
+            content: '"';
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 60px;
+            color: rgba(255, 68, 0, 0.3);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+        }
+
+        .motivasi-detail {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            color: #777;
+            line-height: 1.8;
+        }
+
+        /* ============================================
+           MONOLOG SECTION
+           ============================================ */
+        #monolog-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #0a0000 0%, #000000 50%, #0a0000 100%);
+            z-index: 10;
+            padding: 100px 20px;
+            overflow: hidden;
+        }
+
+        .monolog-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255, 34, 0, 0.05) 0%, transparent 70%);
+        }
+
+        .monolog-content {
+            max-width: 800px;
+            text-align: center;
+            z-index: 5;
+            position: relative;
+        }
+
+        .monolog-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(24px, 4vw, 40px);
+            color: #e0e0e0;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .monolog-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .monolog-text .highlight {
+            color: #ff4400;
+            text-shadow: 0 0 20px rgba(255, 68, 0, 0.5);
+        }
+
+        .monolog-text .fire-text {
+            background: linear-gradient(180deg, #ffcc00, #ff8800, #ff4400, #cc0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            filter: drop-shadow(0 0 10px rgba(255, 68, 0, 0.6));
+        }
+
+        /* ============================================
+           TYPING TEXT SECTION
+           ============================================ */
+        #typing-section {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a0a;
+            z-index: 10;
+            padding: 80px 20px;
+        }
+
+        .typing-container {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .typing-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            color: #ff4400;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        #typing-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(28px, 5vw, 50px);
+            color: #e0e0e0;
+            line-height: 1.4;
+            min-height: 120px;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #ff4400;
+            margin-left: 5px;
+            animation: cursorBlink 0.8s infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px #ff4400;
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ============================================
+           DARK EXTREME MODE SECTION
+           ============================================ */
+        #dark-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 20px;
+            background: #000000;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .dark-vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        .dark-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .dark-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(50px, 10vw, 100px);
+            color: #1a1a1a;
+            text-shadow: 0 0 2px #333;
+            margin-bottom: 50px;
+            animation: darkTitleReveal 5s infinite;
+        }
+
+        @keyframes darkTitleReveal {
+            0%, 100% {
+                color: #1a1a1a;
+                text-shadow: 0 0 2px #333;
+            }
+            50% {
+                color: #ff4400;
+                text-shadow: 0 0 40px rgba(255, 68, 0, 0.8);
+            }
+        }
+
+        .dark-quote-container {
+            margin: 40px 0;
+        }
+
+        .dark-quote {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(18px, 3vw, 28px);
+            color: #333;
+            line-height: 2;
+            margin-bottom: 30px;
+            transition: color 1s ease, text-shadow 1s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        .dark-quote.visible {
+            opacity: 1;
+            transform: translateY(0);
+            color: #888;
+        }
+
+        .dark-quote:hover {
+            color: #ff4400;
+            text-shadow: 0 0 20px rgba(255, 68, 0, 0.5);
+        }
+
+        .dark-ember {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #ff4400;
+            border-radius: 50%;
+            margin: 40px auto;
+            box-shadow: 0 0 10px #ff4400;
+            animation: emberGlow 2s infinite;
+        }
+
+        @keyframes emberGlow {
+            0%, 100% {
+                box-shadow: 0 0 5px #ff4400;
+                opacity: 0.5;
+            }
+            50% {
+                box-shadow: 0 0 20px #ff4400, 0 0 40px #ff0000;
+                opacity: 1;
+            }
+        }
+
+        /* ============================================
+           NARASI PANJANG SECTION
+           ============================================ */
+        #narasi-section {
+            position: relative;
+            padding: 120px 20px;
+            background: linear-gradient(180deg, #000000 0%, #0a0500 30%, #0a0a0a 70%, #000000 100%);
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .narasi-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .narasi-block {
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s ease;
+        }
+
+        .narasi-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .narasi-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(18px, 2.5vw, 22px);
+            color: #999;
+            line-height: 2;
+            text-align: justify;
+        }
+
+        .narasi-text .bold {
+            color: #ff6600;
+            font-weight: 700;
+        }
+
+        .narasi-text .red {
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .narasi-separator {
+            width: 60px;
+            height: 2px;
+            background: #ff4400;
+            margin: 40px auto;
+            box-shadow: 0 0 10px rgba(255, 68, 0, 0.5);
+        }
+
+        .narasi-big-quote {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(30px, 6vw, 60px);
+            text-align: center;
+            background: linear-gradient(180deg, #ff8800, #ff4400, #cc0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 60px 0;
+            filter: drop-shadow(0 0 20px rgba(255, 68, 0, 0.5));
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s ease;
+        }
+
+        .narasi-big-quote.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ============================================
+           PESAN BANGKIT SECTION
+           ============================================ */
+        #bangkit-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #000000 0%, #1a0000 40%, #330000 60%, #1a0000 80%, #000000 100%);
+            z-index: 10;
+            padding: 100px 20px;
+            overflow: hidden;
+        }
+
+        .bangkit-content {
+            max-width: 900px;
+            text-align: center;
+            z-index: 5;
+            position: relative;
+        }
+
+        .bangkit-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: bangkitIconPulse 2s infinite;
+        }
+
+        @keyframes bangkitIconPulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px rgba(255, 68, 0, 0.5));
+            }
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 30px rgba(255, 68, 0, 0.8));
+            }
+        }
+
+        .bangkit-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(40px, 8vw, 90px);
+            color: #ff4400;
+            text-shadow: 0 0 40px rgba(255, 68, 0, 0.6);
+            margin-bottom: 40px;
+        }
+
+        .bangkit-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .bangkit-msg {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(16px, 2.5vw, 24px);
+            color: #ccc;
+            line-height: 1.8;
+            padding: 30px;
+            background: rgba(255, 68, 0, 0.05);
+            border-left: 3px solid #ff4400;
+            text-align: left;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .bangkit-msg.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .bangkit-msg:nth-child(even) {
+            border-left: none;
+            border-right: 3px solid #ff4400;
+            text-align: right;
+            transform: translateX(50px);
+        }
+
+        .bangkit-msg:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        /* ============================================
+           KETEGASAN SECTION
+           ============================================ */
+        #ketegasan-section {
+            position: relative;
+            padding: 120px 20px;
+            background: #0a0a0a;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .ketegasan-list {
+            max-width: 800px;
+            margin: 60px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ketegasan-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 25px;
+            background: linear-gradient(90deg, rgba(255, 68, 0, 0.05), transparent);
+            border-left: 2px solid #ff4400;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
+
+        .ketegasan-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .ketegasan-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            color: rgba(255, 68, 0, 0.3);
+            min-width: 40px;
+        }
+
+        .ketegasan-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           SECRET MESSAGE
+           ============================================ */
+        #secret-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100001;
+            padding: 40px;
+        }
+
+        #secret-container.show {
+            display: flex;
+        }
+
+        .secret-content {
+            text-align: center;
+            max-width: 600px;
+            animation: secretReveal 1s ease;
+        }
+
+        @keyframes secretReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .secret-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .secret-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 40px;
+            color: #ff4400;
+            text-shadow: 0 0 30px rgba(255, 68, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .secret-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px;
+            color: #ccc;
+            line-height: 2;
+        }
+
+        .secret-close {
+            margin-top: 30px;
+            padding: 10px 30px;
+            background: transparent;
+            border: 1px solid #ff4400;
+            color: #ff4400;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .secret-close:hover {
+            background: #ff4400;
+            color: #000;
+        }
+
+        /* ============================================
+           ENDING SCREEN
+           ============================================ */
+        #ending-screen {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #000000;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .ending-fire-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(0deg, rgba(255, 68, 0, 0.2) 0%, rgba(255, 0, 0, 0.05) 50%, transparent 100%);
+            animation: endingFirePulse 4s infinite alternate;
+        }
+
+        @keyframes endingFirePulse {
+            0% {
+                opacity: 0.3;
+                height: 40%;
+            }
+            100% {
+                opacity: 0.6;
+                height: 55%;
+            }
+        }
+
+        .ending-content {
+            text-align: center;
+            z-index: 5;
+            position: relative;
+        }
+
+        .ending-symbol {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: endingSymbolFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes endingSymbolFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .ending-main-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(50px, 12vw, 140px);
+            background: linear-gradient(180deg, #ffffff 0%, #ffcc00 20%, #ff8800 40%, #ff4400 60%, #cc0000 80%, #660000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 10px;
+            filter: drop-shadow(0 0 40px rgba(255, 68, 0, 0.8));
+            animation: endingTextGlow 3s infinite alternate;
+            line-height: 1.1;
+        }
+
+        @keyframes endingTextGlow {
+            0% {
+                filter: drop-shadow(0 0 40px rgba(255, 68, 0, 0.5));
+            }
+            100% {
+                filter: drop-shadow(0 0 80px rgba(255, 68, 0, 1));
+            }
+        }
+
+        .ending-subtitle {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(14px, 2vw, 20px);
+            color: #ff6600;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            margin-top: 20px;
+            text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+        }
+
+        .ending-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(30px, 6vw, 60px);
+            color: #ff4400;
+            letter-spacing: 15px;
+            margin-top: 40px;
+            text-shadow: 0 0 30px rgba(255, 68, 0, 0.6);
+            animation: endingNamePulse 2s infinite;
+        }
+
+        @keyframes endingNamePulse {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .ending-final-quote {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(14px, 2vw, 18px);
+            color: #666;
+            max-width: 500px;
+            margin: 30px auto 0;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .ending-line {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff4400, transparent);
+            margin: 30px auto;
+            box-shadow: 0 0 10px #ff4400;
+        }
+
+        .ending-year {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            color: #333;
+            letter-spacing: 6px;
+            margin-top: 20px;
+        }
+
+        /* ============================================
+           GENERAL KEYFRAMES
+           ============================================ */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes titleReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+                filter: blur(10px);
+            }
+            50% {
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: drop-shadow(0 0 30px rgba(255, 68, 0, 0.8));
+            }
+        }
+
+        @keyframes lineExpand {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 300px;
+            }
+        }
+
+        @keyframes rageShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2px, -1px) rotate(0.5deg); }
+            50% { transform: translate(-1px, 2px) rotate(-0.5deg); }
+            75% { transform: translate(-2px, -1px) rotate(0.5deg); }
+            100% { transform: translate(1px, 1px) rotate(-0.5deg); }
+        }
+
+        @keyframes ragePulse {
+            0%, 100% {
+                background: rgba(255, 0, 0, 0.1);
+            }
+            50% {
+                background: rgba(255, 0, 0, 0.2);
+            }
+        }
+
+        /* ============================================
+           BURNING TEXT EFFECT
+           ============================================ */
+        .burning-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .burning-text::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(0deg, rgba(255, 68, 0, 0.4), rgba(255, 136, 0, 0.2), transparent);
+            filter: blur(5px);
+            animation: burnFlicker 0.3s infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes burnFlicker {
+            0% {
+                opacity: 0.5;
+                height: 15px;
+            }
+            100% {
+                opacity: 0.8;
+                height: 25px;
+            }
+        }
+
+        /* ============================================
+           PARALLAX SECTIONS
+           ============================================ */
+        .parallax-layer {
+            transition: transform 0.1s linear;
+        }
+
+        /* ============================================
+           SCREEN SHAKE EFFECT
+           ============================================ */
+        .screen-shake {
+            animation: screenShake 0.3s ease;
+        }
+
+        @keyframes screenShake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(3px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* ============================================
+           BANGKIT ANIMATION OVERLAY
+           ============================================ */
+        #bangkit-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99997;
+            pointer-events: none;
+        }
+
+        #bangkit-overlay.show {
+            display: flex;
+        }
+
+        .bangkit-anim-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(60px, 15vw, 200px);
+            color: #ff4400;
+            text-shadow: 0 0 60px rgba(255, 68, 0, 0.8), 0 0 120px rgba(255, 0, 0, 0.5);
+            animation: bangkitAnim 2s forwards;
+            letter-spacing: 15px;
+        }
+
+        @keyframes bangkitAnim {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+                filter: blur(10px);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1.2) rotate(2deg);
+                filter: blur(0);
+            }
+            60% {
+                transform: scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(2);
+                filter: blur(20px);
+            }
+        }
+
+        /* ============================================
+           FEAR SECTION
+           ============================================ */
+        #fear-section {
+            position: relative;
+            padding: 120px 20px;
+            background: linear-gradient(180deg, #000000 0%, #0a0000 50%, #000000 100%);
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .fear-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .fear-item {
+            margin-bottom: 50px;
+            padding: 40px;
+            border: 1px solid rgba(255, 0, 0, 0.1);
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fear-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fear-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #ff0000, #ff4400, #ff0000);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .fear-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            color: #ff0000;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .fear-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            color: #ff4400;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 68, 0, 0.3);
+        }
+
+        .fear-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            color: #999;
+            line-height: 1.8;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
+            }
+
+            .timeline-item::before {
+                left: -35px !important;
+                right: auto !important;
+            }
+
+            .timeline-item::after {
+                left: -25px !important;
+                right: auto !important;
+            }
+
+            .hero-stats {
+                gap: 30px;
+            }
+
+            .motivasi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .heartbeat-container {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+            }
+
+            .rage-btn,
+            .bangkit-btn {
+                padding: 8px 16px;
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .warrior-silhouette {
+                transform: translateX(-50%) scale(0.6);
+            }
+
+            .warrior-silhouette.visible {
+                transform: translateX(-50%) scale(0.6) translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .opening-subtitle {
+                font-size: 12px;
+                letter-spacing: 4px;
+            }
+
+            .section-number {
+                font-size: 80px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .bangkit-msg {
+                padding: 20px;
+                font-size: 16px;
+            }
+        }
+
+        /* ============================================
+           ADDITIONAL FIRE GLOW EFFECTS
+           ============================================ */
+        .glow-red {
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .glow-orange {
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+        }
+
+        .text-glow-red {
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .text-glow-orange {
+            text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+        }
+
+        /* ============================================
+           FLOATING EMBERS CSS
+           ============================================ */
+        .floating-ember {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #ff4400;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            box-shadow: 0 0 6px #ff4400, 0 0 12px #ff2200;
+        }
+
+        /* ============================================
+           COUNTER ANIMATION
+           ============================================ */
+        .counter-animate {
+            transition: all 0.1s ease;
+        }
+
+        /* ============================================
+           SOUND TOGGLE
+           ============================================ */
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            padding: 8px 16px;
+            background: rgba(10, 0, 0, 0.8);
+            border: 1px solid rgba(255, 68, 0, 0.3);
+            color: #ff4400;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .sound-toggle:hover {
+            border-color: #ff4400;
+            box-shadow: 0 0 15px rgba(255, 68, 0, 0.3);
+        }
+
+        /* ============================================
+           ADDITIONAL SECTIONS STYLING
+           ============================================ */
+        .fire-border-top {
+            border-top: 1px solid rgba(255, 68, 0, 0.2);
+        }
+
+        .fire-border-bottom {
+            border-bottom: 1px solid rgba(255, 68, 0, 0.2);
+        }
+
+        .ember-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 40px 0;
+        }
+
+        .ember-dot {
+            width: 4px;
+            height: 4px;
+            background: #ff4400;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #ff4400;
+        }
+
+        .ember-line {
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff4400, transparent);
+        }
+
+        /* ============================================
+           GALANG NAME SCATTERED
+           ============================================ */
+        .scattered-letters {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .scattered-letter {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 100px;
+            background: linear-gradient(180deg, #ff8800, #ff4400);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 15px rgba(255, 68, 0, 0.5));
+            animation: letterFloat 3s infinite ease-in-out;
+        }
+
+        .scattered-letter:nth-child(1) { animation-delay: 0s; }
+        .scattered-letter:nth-child(2) { animation-delay: 0.2s; }
+        .scattered-letter:nth-child(3) { animation-delay: 0.4s; }
+        .scattered-letter:nth-child(4) { animation-delay: 0.6s; }
+        .scattered-letter:nth-child(5) { animation-delay: 0.8s; }
+        .scattered-letter:nth-child(6) { animation-delay: 1.0s; }
+
+        @keyframes letterFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(3deg);
+            }
+        }
+
+        /* ============================================
+           VIGNETTE OVERLAY
+           ============================================ */
+        .vignette-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        /* ============================================
+           PROGRESS BAR
+           ============================================ */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0000, #ff4400, #ff8800, #ffaa00);
+            z-index: 99999;
+            box-shadow: 0 0 10px #ff4400;
+            transition: width 0.1s linear;
+        }
+
+        /* ============================================
+           FLASH TEXT ANIMATION
+           ============================================ */
+        .flash-text {
+            animation: flashText 0.1s 3;
+        }
+
+        @keyframes flashText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ============================================
+           GLITCH EFFECT
+           ============================================ */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            color: #ff0000;
+            animation: glitch1 2s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        .glitch::after {
+            color: #ff8800;
+            animation: glitch2 2s infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch1 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(3px, -3px); }
+            60% { transform: translate(-2px, 1px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitch2 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(3px, -3px); }
+            40% { transform: translate(-3px, 3px); }
+            60% { transform: translate(2px, -1px); }
+            80% { transform: translate(-2px, 2px); }
+        }
+
+        /* ============================================
+           PULSE RING EFFECT
+           ============================================ */
+        .pulse-ring {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(255, 68, 0, 0.3);
+            border-radius: 50%;
+            animation: pulseRingExpand 3s infinite;
+        }
+
+        @keyframes pulseRingExpand {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================
+           FINAL ADDITIONAL STYLES
+           ============================================ */
+        .section-gap {
+            height: 50px;
+            background: #0a0a0a;
+            position: relative;
+            z-index: 10;
+        }
+
+        .quote-mark {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 100px;
+            color: rgba(255, 68, 0, 0.1);
+            line-height: 1;
+        }
+
+        .fire-emoji-row {
+            text-align: center;
+            font-size: 30px;
+            letter-spacing: 10px;
+            padding: 20px 0;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         LOADING SCREEN
+         ============================================ -->
+    <div id="loading-screen">
+        <div class="loading-fire-container">
+            <div class="loading-ember" style="left:40%"></div>
+            <div class="loading-ember"></div>
+            <div class="loading-ember"></div>
+            <div class="loading-ember"></div>
+            <div class="loading-ember"></div>
+            <div class="loading-flame"></div>
+        </div>
+        <div class="loading-text">MEMUAT API</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <div class="loading-percentage" id="loading-percentage">0%</div>
+    </div>
+
+    <!-- ============================================
+         PROGRESS BAR
+         ============================================ -->
+    <div id="progress-bar"></div>
+
+    <!-- ============================================
+         CANVAS LAYERS
+         ============================================ -->
+    <canvas id="fire-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+    <canvas id="ash-canvas"></canvas>
+    <canvas id="mouse-fire-canvas"></canvas>
+
+    <!-- ============================================
+         SMOKE OVERLAY
+         ============================================ -->
+    <div class="smoke-overlay">
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+        <div class="smoke-particle"></div>
+    </div>
+
+    <!-- ============================================
+         VIGNETTE OVERLAY
+         ============================================ -->
+    <div class="vignette-overlay"></div>
+
+    <!-- ============================================
+         LIGHTNING FLASH
+         ============================================ -->
+    <div id="lightning-flash"></div>
+
+    <!-- ============================================
+         HEARTBEAT COUNTER
+         ============================================ -->
+    <div class="heartbeat-container" id="heartbeat-container" style="display:none;">
+        <div>
+            <span class="heartbeat-icon">❤️</span>
+        </div>
+        <div>
+            <div class="heartbeat-count" id="heartbeat-count">0</div>
+            <div class="heartbeat-label">DETAK JANTUNG</div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         SOUND TOGGLE
+         ============================================ -->
+    <button class="sound-toggle" id="sound-toggle" style="display:none;" onclick="toggleSound()">
+        🔇 SOUND OFF
+    </button>
+
+    <!-- ============================================
+         RAGE MODE BUTTON
+         ============================================ -->
+    <button class="rage-btn" id="rage-btn" style="display:none;" onclick="toggleRageMode()">
+        🔥 RAGE MODE
+    </button>
+
+    <!-- ============================================
+         BANGKIT LAGI BUTTON
+         ============================================ -->
+    <button class="bangkit-btn" id="bangkit-btn" style="display:none;" onclick="triggerBangkit()">
+        ⚔️ BANGKIT LAGI
+    </button>
+
+    <!-- ============================================
+         BANGKIT OVERLAY
+         ============================================ -->
+    <div id="bangkit-overlay">
+        <div class="bangkit-anim-text">BANGKIT!</div>
+    </div>
+
+    <!-- ============================================
+         SECRET MESSAGE CONTAINER
+         ============================================ -->
+    <div id="secret-container">
+        <div class="secret-content">
+            <div class="secret-icon">🔓</div>
+            <div class="secret-title">PESAN RAHASIA UNTUK GALANG</div>
+            <div class="secret-text">
+                Kamu telah menemukan pesan tersembunyi ini.<br><br>
+                Ini artinya kamu adalah orang yang tidak mudah menyerah.<br>
+                Kamu terus mencari, terus menggali, terus bertahan.<br><br>
+                <span style="color: #ff4400; font-weight: 700;">
+                    "Orang yang menemukan pesan ini adalah orang yang tidak pernah berhenti mencoba.
+                    Dan itulah kamu, GALANG. Kamu istimewa bukan karena kamu sempurna,
+                    tapi karena kamu tidak pernah berhenti berjuang."
+                </span><br><br>
+                🔥 Teruslah menyala. Teruslah berjalan. 🔥
+            </div>
+            <button class="secret-close" onclick="closeSecret()">TUTUP PESAN</button>
+        </div>
+    </div>
+
+    <!-- ============================================
+         SECTION 1: OPENING DRAMATIC SCREEN
+         ============================================ -->
+    <section id="opening-screen">
+        <div class="opening-bg-fire"></div>
+
+        <div class="warrior-silhouette">
+            <div class="warrior-body">
+                <div class="warrior-cape"></div>
+                <div class="warrior-head"></div>
+                <div class="warrior-torso"></div>
+                <div class="warrior-legs">
+                    <div class="warrior-leg"></div>
+                    <div class="warrior-leg"></div>
+                </div>
+                <div class="warrior-sword"></div>
+            </div>
+        </div>
+
+        <div class="opening-content">
+            <div class="opening-subtitle">SEBUAH PERJALANAN MELAWAN TAKDIR</div>
+            <h1 class="opening-title glitch" data-text="GALANG">GALANG</h1>
+            <div class="opening-tagline">🔥 Api yang tak pernah padam 🔥</div>
+            <div class="opening-line"></div>
+            <p class="opening-quote">
+                "Setiap pejuang memiliki ceritanya sendiri.<br>
+                Dan ini adalah kisah tentang seorang yang menolak untuk tunduk pada takdir."
+            </p>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll ke bawah</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 2: HERO SECTION
+         ============================================ -->
+    <section id="hero-section">
+        <div class="hero-fire-left"></div>
+        <div class="hero-fire-right"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge">⚔️ PEJUANG KEHIDUPAN ⚔️</div>
+
+            <div class="scattered-letters">
+                <span class="scattered-letter">G</span>
+                <span class="scattered-letter">A</span>
+                <span class="scattered-letter">L</span>
+                <span class="scattered-letter">A</span>
+                <span class="scattered-letter">N</span>
+                <span class="scattered-letter">G</span>
+            </div>
+
+            <h2 class="hero-epithet">BADAI YANG BERJALAN</h2>
+
+            <p class="hero-description">
+                Dunia tidak pernah ramah pada pejuang. Tapi GALANG bukan diciptakan untuk hidup nyaman.
+                Dia diciptakan untuk menembus badai, melawan arus, dan membakar setiap rintangan
+                yang menghalangi jalannya. Inilah kisah tentang seseorang yang menolak untuk kalah.
+            </p>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="999">0</div>
+                    <div class="stat-label">Hari Bertarung</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="∞">∞</div>
+                    <div class="stat-label">Semangat Membara</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="100">0</div>
+                    <div class="stat-label">% Pantang Menyerah</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <div class="section-divider">
+        <div class="divider-fire"></div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ============================================
+         SECTION 3: PERJALANAN HIDUP
+         ============================================ -->
+    <section id="journey-section">
+        <div class="section-header">
+            <div class="section-number">03</div>
+            <h2 class="section-title">PERJALANAN HIDUP</h2>
+            <div class="section-subtitle">🚶‍♂️ Setiap langkah adalah pertempuran</div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-icon">🌑</div>
+                <div class="timeline-era">FASE KEGELAPAN</div>
+                <div class="timeline-title">Lahir dari Abu</div>
+                <div class="timeline-text">
+                    Setiap pejuang memiliki awal yang gelap. GALANG lahir bukan dengan sendok emas,
+                    tapi dengan tekad baja. Ketika dunia berkata "kamu tidak bisa", dia menjawab
+                    dengan diam — dan membuktikannya dengan tindakan. Kegelapan bukan akhir,
+                    kegelapan adalah awal dari ledakan cahaya. 🔥
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">💀</div>
+                <div class="timeline-era">FASE UJIAN</div>
+                <div class="timeline-title">Diuji oleh Kehidupan</div>
+                <div class="timeline-text">
+                    Hidup menguji GALANG dengan cara yang kejam. Kegagalan datang bertubi-tubi.
+                    Orang-orang meragukan. Pintu-pintu tertutup. Tapi setiap pukulan yang datang
+                    justru membentuk baja dalam jiwanya. Dia jatuh tujuh kali, bangkit delapan kali.
+                    Setiap luka adalah medali kehormatan. ⚔️
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">🔥</div>
+                <div class="timeline-era">FASE KEBANGKITAN</div>
+                <div class="timeline-title">Api Mulai Menyala</div>
+                <div class="timeline-text">
+                    Dari abu kegagalan, muncul percikan api. GALANG mulai menemukan kekuatannya.
+                    Bukan kekuatan otot, tapi kekuatan jiwa. Kekuatan untuk berkata "TIDAK"
+                    pada kekalahan. Kekuatan untuk berdiri ketika seluruh dunia mendorongnya jatuh.
+                    Api itu kecil, tapi tak bisa dipadamkan. 🛡️
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">⚔️</div>
+                <div class="timeline-era">FASE PERTEMPURAN</div>
+                <div class="timeline-title">Melawan Dunia dan Takdir</div>
+                <div class="timeline-text">
+                    GALANG tidak lagi berlari dari masalah — dia berlari menuju masalah.
+                    Setiap tantangan adalah musuh yang harus ditaklukkan. Setiap rintangan
+                    adalah tembok yang harus dihancurkan. Dia berjalan dengan api di matanya
+                    dan badai di jiwanya. Dunia gemetar melihatnya datang. 🩸
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">🧱</div>
+                <div class="timeline-era">FASE PEMBANGUNAN</div>
+                <div class="timeline-title">Membangun dari Reruntuhan</div>
+                <div class="timeline-text">
+                    Dari puing-puing kehancuran, GALANG membangun istananya. Bukan istana dari emas,
+                    tapi dari keringat, air mata, dan darah perjuangan. Setiap batu yang dia letakkan
+                    adalah bukti bahwa dia tidak pernah menyerah. Fondasi yang dibangun dari rasa sakit
+                    adalah fondasi yang paling kuat. 💪
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">🔥</div>
+                <div class="timeline-era">FASE SEKARANG</div>
+                <div class="timeline-title">Api yang Tak Pernah Padam</div>
+                <div class="timeline-text">
+                    Hari ini, GALANG berdiri tegak. Bukan karena hidupnya sudah mudah,
+                    tapi karena dia sudah terbiasa dengan kesulitan. Api dalam dirinya
+                    tidak pernah padam — bahkan semakin besar. Setiap hari adalah pertempuran baru,
+                    dan dia selalu siap. THE FIRE NEVER DIES. 🔥🔥🔥
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <div class="section-divider">
+        <div class="divider-fire"></div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ============================================
+         SECTION 4: KATA MOTIVASI
+         ============================================ -->
+    <section id="motivasi-section">
+        <div class="section-header">
+            <div class="section-number">04</div>
+            <h2 class="section-title">KATA-KATA API</h2>
+            <div class="section-subtitle">🔥 Setiap kata adalah bara yang menyala</div>
+        </div>
+
+        <div class="motivasi-grid">
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">🔥</div>
+                <div class="motivasi-quote">
+                    GALANG, dunia tidak pernah ramah pada pejuang. Tapi pejuang sejati tidak butuh keramahan dunia.
+                </div>
+                <div class="motivasi-detail">
+                    Dunia ini dirancang untuk menguji siapa yang benar-benar layak.
+                    Dan kamu, GALANG, telah membuktikan berkali-kali bahwa kamu layak.
+                    Bukan karena hidupmu mudah, tapi karena kamu tidak pernah memilih jalan yang mudah.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">⚔️</div>
+                <div class="motivasi-quote">
+                    Api yang membakar hidupmu bukan untuk menghancurkanmu, tapi menempa dirimu menjadi baja.
+                </div>
+                <div class="motivasi-detail">
+                    Setiap rasa sakit yang kamu alami adalah proses penempaan.
+                    Besi biasa menjadi pedang hanya setelah ditempa oleh api ribuan kali.
+                    Kamu sedang dalam proses menjadi pedang terkuat yang pernah ada.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">🩸</div>
+                <div class="motivasi-quote">
+                    Selama jantungmu masih berdetak, pertempuran belum selesai. Bangkit, GALANG!
+                </div>
+                <div class="motivasi-detail">
+                    Kegagalan bukan akhir. Rasa sakit bukan akhir. Penolakan bukan akhir.
+                    Satu-satunya akhir adalah ketika kamu memutuskan untuk berhenti.
+                    Dan kamu bukan tipe orang yang berhenti.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">🛡️</div>
+                <div class="motivasi-quote">
+                    Kamu bukan manusia biasa — kamu adalah badai yang berjalan. Dunia gemetar mendengar namamu.
+                </div>
+                <div class="motivasi-detail">
+                    Ketika orang lain melihat tembok, kamu melihat tantangan.
+                    Ketika orang lain melihat akhir, kamu melihat awal yang baru.
+                    Itulah yang membedakanmu dari yang lain, GALANG.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">💀</div>
+                <div class="motivasi-quote">
+                    Hidup ini keras, tapi kamu lebih keras. Setiap pukulan yang datang hanya membuatmu semakin kuat.
+                </div>
+                <div class="motivasi-detail">
+                    Berlian terbentuk di bawah tekanan luar biasa. Emas dimurnikan oleh api yang membara.
+                    Dan GALANG — kamu sedang dalam proses menjadi sesuatu yang sangat berharga.
+                    Jangan berhenti sekarang.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">🌑</div>
+                <div class="motivasi-quote">
+                    Dalam kegelapan terdalam, api terkecil pun terlihat sangat terang. Jadilah api itu, GALANG.
+                </div>
+                <div class="motivasi-detail">
+                    Jangan menunggu cahaya datang dari luar. Jadilah cahayamu sendiri.
+                    Dalam dunia yang penuh kegelapan, orang yang membawa api akan selalu menjadi pemimpin.
+                    Dan kamu dilahirkan untuk memimpin, bukan untuk mengikuti.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">🧱</div>
+                <div class="motivasi-quote">
+                    Tembok setinggi apapun bisa dihancurkan. Yang penting bukan tingginya tembok, tapi kerasnya kepalamu.
+                </div>
+                <div class="motivasi-detail">
+                    Setiap orang sukses pernah menghadapi tembok yang tampak mustahil untuk dihancurkan.
+                    Tapi mereka tidak berhenti memukul. Pukulan demi pukulan, retakan mulai muncul.
+                    Dan akhirnya, tembok itu runtuh. Teruslah memukul, GALANG.
+                </div>
+            </div>
+
+            <div class="motivasi-card">
+                <div class="motivasi-emoji">🔥</div>
+                <div class="motivasi-quote">
+                    Mereka yang tertawa padamu hari ini, akan mengaguminya besok. Teruslah berjalan, GALANG.
+                </div>
+                <div class="motivasi-detail">
+                    Jangan biarkan kata-kata orang lain memadamkan apimu.
+                    Orang-orang yang meragukan hanya bisa melihat posisimu sekarang,
+                    bukan potensimu di masa depan. Dan potensimu, GALANG, tidak terbatas.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         MONOLOG SECTION
+         ============================================ -->
+    <section id="monolog-section">
+        <div class="monolog-bg"></div>
+        <div class="monolog-content">
+            <div class="quote-mark">"</div>
+            <div class="monolog-text">
+                Dengarkan aku, <span class="fire-text">GALANG</span>.<br><br>
+                Kamu telah berjalan sangat jauh.<br>
+                Kamu telah melewati <span class="highlight">malam-malam terpanjang</span>.<br>
+                Kamu telah meminum <span class="highlight">kepahitan</span> yang bahkan tidak bisa dibayangkan orang lain.<br><br>
+                Tapi lihat dirimu sekarang —<br>
+                <span class="fire-text">MASIH BERDIRI. MASIH BERNAPAS. MASIH MELAWAN.</span><br><br>
+                Itu bukan kebetulan.<br>
+                Itu adalah bukti bahwa kamu <span class="highlight">lebih kuat</span><br>
+                dari apapun yang pernah mencoba menghancurkanmu.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         TYPING TEXT SECTION
+         ============================================ -->
+    <section id="typing-section">
+        <div class="typing-container">
+            <div class="typing-label">📜 PESAN UNTUK GALANG</div>
+            <div id="typing-text"></div>
+            <span class="typing-cursor"></span>
+        </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <div class="section-divider">
+        <div class="divider-fire"></div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ============================================
+         NARASI PANJANG SECTION
+         ============================================ -->
+    <section id="narasi-section">
+        <div class="section-header">
+            <div class="section-number">05</div>
+            <h2 class="section-title">NARASI PERJUANGAN</h2>
+            <div class="section-subtitle">📖 Kisah yang tak tertulis di buku manapun</div>
+        </div>
+
+        <div class="narasi-container">
+            <div class="narasi-block">
+                <p class="narasi-text">
+                    Ada sebuah cerita tentang seorang pemuda bernama <span class="bold">GALANG</span>.
+                    Dia bukan lahir dari keluarga kaya. Dia bukan anak yang selalu mendapat segalanya dengan mudah.
+                    Dia adalah anak yang harus <span class="red">berjuang untuk setiap napas yang dia hirup</span>.
+                </p>
+            </div>
+
+            <div class="narasi-separator"></div>
+
+            <div class="narasi-block">
+                <p class="narasi-text">
+                    Ketika teman-temannya bermain, dia bekerja. Ketika orang lain tidur nyenyak, dia terjaga —
+                    bukan karena insomnia, tapi karena <span class="bold">mimpinya terlalu besar untuk ditidurkan</span>.
+                    Dia tahu bahwa jalan yang dia pilih tidak mudah. Tapi dia juga tahu bahwa
+                    <span class="red">jalan yang mudah tidak pernah membawa seseorang ke tempat yang luar biasa</span>.
+                </p>
+            </div>
+
+            <div class="narasi-big-quote">
+                "JALAN YANG MUDAH TIDAK MEMBAWA KE TEMPAT YANG LUAR BIASA"
+            </div>
+
+            <div class="narasi-block">
+                <p class="narasi-text">
+                    Suatu hari, dunia memberikan pukulan terbesar dalam hidupnya. Semuanya runtuh.
+                    Impian yang dia bangun bertahun-tahun <span class="red">hancur dalam sekejap</span>.
+                    Orang-orang yang dia percaya pergi meninggalkannya. Dia sendirian, berlutut di atas reruntuhan mimpinya.
+                </p>
+            </div>
+
+            <div class="narasi-separator"></div>
+
+            <div class="narasi-block">
+                <p class="narasi-text">
+                    Tapi di saat itulah, sesuatu yang luar biasa terjadi. Di dalam kegelapan terdalam,
+                    dia menemukan <span class="bold">percikan api yang tersembunyi di dalam dadanya</span>.
+                    Api yang selama ini tertidur, kini mulai menyala. Bukan api biasa —
+                    tapi <span class="red">api pejuang yang tidak bisa dipadamkan oleh apapun</span>.
+                </p>
+            </div>
+
+            <div class="narasi-big-quote">
+                "DARI ABU KEHANCURAN, BANGKIT LEGENDA"
+            </div>
+
+            <div class="narasi-block">
+                <p class="narasi-text">
+                    <span class="bold">GALANG</span> bangkit. Bukan dengan dramatis seperti di film.
+                    Tapi dengan langkah kecil, satu per satu. Setiap hari, dia memilih untuk
+                    <span class="red">tidak menyerah</span>. Setiap pagi, dia memilih untuk
+                    <span class="bold">bangkit lagi</span>. Dan setiap malam, dia berjanji pada dirinya sendiri:
+                    <span class="red">"Besok, aku akan lebih kuat dari hari ini."</span>
+                </p>
+            </div>
+
+            <div class="narasi-separator"></div>
+
+            <div class="narasi-block">
+                <p class="narasi-text">
+                    Dan hari ini, GALANG masih berdiri. Bukan karena hidupnya sudah sempurna.
+                    Bukan karena masalahnya sudah hilang. Tapi karena dia sudah <span class="bold">berubah</span>.
+                    Dia bukan lagi pemuda yang takut pada kegelapan. Dia adalah
+                    <span class="red">pejuang yang membawa api ke dalam kegelapan</span>.
+                    Dan apinya... <span class="bold">tidak pernah padam</span>. 🔥
+                </p>
+            </div>
+
+            <div class="narasi-big-quote">
+                "THE FIRE NEVER DIES" 🔥
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SEMANGAT MELAWAN RASA TAKUT
+         ============================================ -->
+    <section id="fear-section">
+        <div class="section-header">
+            <div class="section-number">06</div>
+            <h2 class="section-title">MELAWAN RASA TAKUT</h2>
+            <div class="section-subtitle">💀 Ketakutan hanya ilusi — kekuatanmu nyata</div>
+        </div>
+
+        <div class="fear-content">
+            <div class="fear-item">
+                <div class="fear-label">RASA TAKUT #1</div>
+                <div class="fear-title">Takut Gagal</div>
+                <div class="fear-text">
+                    GALANG, kegagalan bukan musuhmu. Kegagalan adalah gurumu yang paling kejam
+                    tapi paling efektif. Setiap kali kamu gagal, kamu belajar sesuatu yang
+                    tidak bisa diajarkan oleh keberhasilan. Orang yang tidak pernah gagal
+                    adalah orang yang tidak pernah mencoba. Dan kamu bukan orang seperti itu. 🔥
+                </div>
+            </div>
+
+            <div class="fear-item">
+                <div class="fear-label">RASA TAKUT #2</div>
+                <div class="fear-title">Takut Sendirian</div>
+                <div class="fear-text">
+                    Pejuang sejati sering berjalan sendirian. Bukan karena mereka tidak diinginkan,
+                    tapi karena jalan yang mereka pilih terlalu berani untuk diikuti orang lain.
+                    GALANG, kesendirian bukan kelemahan — itu adalah harga dari keberanian.
+                    Singa berjalan sendiri, domba berjalan bergerombol. ⚔️
+                </div>
+            </div>
+
+            <div class="fear-item">
+                <div class="fear-label">RASA TAKUT #3</div>
+                <div class="fear-title">Takut Tidak Cukup Baik</div>
+                <div class="fear-text">
+                    Kamu tidak perlu sempurna, GALANG. Kamu hanya perlu NYATA. Kamu hanya perlu HADIR.
+                    Kamu hanya perlu terus BERJALAN. Dunia ini tidak mencari kesempurnaan —
+                    dunia ini mencari keberanian. Dan keberanian mengalir deras dalam darahmu. 🩸
+                </div>
+            </div>
+
+            <div class="fear-item">
+                <div class="fear-label">RASA TAKUT #4</div>
+                <div class="fear-title">Takut pada Masa Depan</div>
+                <div class="fear-text">
+                    Masa depan belum ditulis. Dan penulisnya adalah KAMU. Setiap keputusan yang kamu
+                    ambil hari ini adalah kalimat yang kamu tulis di buku kehidupanmu.
+                    Jadi tulislah cerita yang membuat apimu menyala lebih besar.
+                    Masa depan milik mereka yang berani membakarnya dengan semangat. 🔥
+                </div>
+            </div>
+
+            <div class="fear-item">
+                <div class="fear-label">RASA TAKUT #5</div>
+                <div class="fear-title">Takut Mengecewakan</div>
+                <div class="fear-text">
+                    Kamu tidak bisa menyenangkan semua orang. Tapi kamu bisa membuat dirimu bangga.
+                    Hiduplah bukan untuk validasi orang lain, tapi untuk kebenaran di dalam hatimu.
+                    Ketika kamu tidur di malam hari dan kamu tahu kamu sudah memberikan segalanya —
+                    itulah kemenangan sesungguhnya, GALANG. 🛡️
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         KETEGASAN SECTION
+         ============================================ -->
+    <section id="ketegasan-section">
+        <div class="section-header">
+            <div class="section-number">07</div>
+            <h2 class="section-title">KATA KETEGASAN</h2>
+            <div class="section-subtitle">🛡️ Prinsip hidup seorang pejuang</div>
+        </div>
+
+        <div class="ketegasan-list">
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">01</div>
+                <div class="ketegasan-text">
+                    AKU TIDAK AKAN MENYERAH. Tidak hari ini. Tidak besok. TIDAK PERNAH.
+                    Selama napasku masih ada, aku akan terus berjuang. 🔥
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">02</div>
+                <div class="ketegasan-text">
+                    AKU LEBIH KUAT DARI KEMARIN. Setiap hari aku bertumbuh. Setiap rasa sakit
+                    membuatku lebih tangguh. Aku adalah versi terbaik dari diriku. ⚔️
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">03</div>
+                <div class="ketegasan-text">
+                    AKU TIDAK BUTUH PERSETUJUAN SIAPAPUN. Jalanku adalah jalanku sendiri.
+                    Aku yang memilih, aku yang berjalan, aku yang bertanggung jawab. 🛡️
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">04</div>
+                <div class="ketegasan-text">
+                    KEGAGALAN ADALAH BAHAN BAKAR. Setiap kekalahan menyalakan api yang lebih besar.
+                    Aku tidak takut jatuh — aku takut tidak mencoba. 🩸
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">05</div>
+                <div class="ketegasan-text">
+                    AKU ADALAH BADAI. Bukan angin sepoi-sepoi. Aku datang dengan kekuatan penuh.
+                    Aku menghancurkan batasan dan membangun kemungkinan baru. 💀
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">06</div>
+                <div class="ketegasan-text">
+                    RASA SAKIT ADALAH SEMENTARA. Tapi menyerah adalah selamanya.
+                    Aku memilih rasa sakit sementara demi kemenangan abadi. 🔥
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">07</div>
+                <div class="ketegasan-text">
+                    AKU TIDAK HIDUP UNTUK BERTAHAN — AKU HIDUP UNTUK MENAKLUKKAN.
+                    Setiap hari adalah medan perang baru, dan aku selalu siap bertempur. ⚔️
+                </div>
+            </div>
+            <div class="ketegasan-item">
+                <div class="ketegasan-number">08</div>
+                <div class="ketegasan-text">
+                    AKU MEMILIH UNTUK MENYALA. Di dunia yang penuh kegelapan,
+                    aku memilih untuk menjadi api. Api yang menerangi, memanasi, dan membakar
+                    setiap hal yang menghalangi jalanku. 🔥🔥🔥
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <div class="section-divider">
+        <div class="divider-fire"></div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ============================================
+         SECTION 5: MODE GELAP EKSTREM
+         ============================================ -->
+    <section id="dark-section">
+        <div class="dark-vignette"></div>
+        <div class="dark-content">
+            <h2 class="dark-title" data-text="KEGELAPAN">KEGELAPAN</h2>
+
+            <div class="dark-quote-container">
+                <p class="dark-quote">
+                    🌑 Di sini, di kegelapan terdalam, kamu akan menemukan dirimu yang sesungguhnya.
+                </p>
+                <div class="dark-ember"></div>
+                <p class="dark-quote">
+                    💀 Kegelapan bukan untuk ditakuti. Kegelapan adalah kanvas tempat apimu bersinar paling terang.
+                </p>
+                <div class="dark-ember"></div>
+                <p class="dark-quote">
+                    🌑 Ketika dunia memadamkan semua cahaya, jadilah satu-satunya yang masih menyala.
+                </p>
+                <div class="dark-ember"></div>
+                <p class="dark-quote">
+                    💀 GALANG, kamu pernah berada di titik terendah. Tapi bahkan di titik terendah,
+                    kamu tidak pernah benar-benar mati. Karena api di dalam dirimu tidak bisa dibunuh.
+                </p>
+                <div class="dark-ember"></div>
+                <p class="dark-quote">
+                    🌑 Malam paling gelap akan berakhir. Dan ketika fajar tiba,
+                    kamu akan menjadi satu-satunya yang masih berdiri tegak.
+                </p>
+                <div class="dark-ember"></div>
+                <p class="dark-quote">
+                    🔥 Karena kamu bukan manusia biasa, GALANG. Kamu adalah pejuang yang dipilih oleh api.
+                    Dan api... tidak pernah mati.
+                </p>
+            </div>
+
+            <div class="ember-divider">
+                <div class="ember-line"></div>
+                <div class="ember-dot"></div>
+                <div class="ember-line"></div>
+                <div class="ember-dot"></div>
+                <div class="ember-line"></div>
+            </div>
+
+            <div class="fire-emoji-row">🔥 🔥 🔥 🔥 🔥</div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         PESAN BANGKIT SECTION
+         ============================================ -->
+    <section id="bangkit-section">
+        <div class="bangkit-content">
+            <div class="bangkit-icon">🔥</div>
+            <h2 class="bangkit-title">BANGKIT DARI KEGAGALAN</h2>
+
+            <div class="bangkit-messages">
+                <div class="bangkit-msg">
+                    🩸 GALANG, setiap kali kamu jatuh, ingatlah ini: tanah yang kamu sentuh saat jatuh
+                    adalah tanah yang sama yang akan menjadi pijakanmu untuk melompat lebih tinggi.
+                    Jatuh bukan kekalahan — menolak bangkit itulah kekalahan.
+                </div>
+
+                <div class="bangkit-msg">
+                    ⚔️ Kegagalan adalah guru yang paling jujur. Dia tidak akan berbohong padamu.
+                    Dia akan menunjukkan kelemahanmu dengan brutal. Tapi di balik kebrutalannya,
+                    ada pelajaran yang tidak bisa kamu dapatkan dari manapun.
+                </div>
+
+                <div class="bangkit-msg">
+                    🔥 Lihatlah sejarah. Setiap orang besar pernah gagal. Setiap legenda pernah jatuh.
+                    Yang membedakan mereka adalah keputusan untuk BANGKIT LAGI.
+                    Dan kamu, GALANG, memiliki DNA seorang pejuang yang tidak bisa dikalahkan.
+                </div>
+
+                <div class="bangkit-msg">
+                    🛡️ Ketika kamu merasa tidak kuat lagi, ingatlah mengapa kamu memulai.
+                    Ingatlah semua orang yang meragukan. Ingatlah semua momen ketika mereka
+                    mentertawakanmu. Biarkan semua itu menjadi BAHAN BAKAR apimu.
+                </div>
+
+                <div class="bangkit-msg">
+                    💀 Rasa sakit itu nyata. Air mata itu nyata. Kelelahan itu nyata.
+                    Tapi kekuatanmu JUGA NYATA. Dan kekuatanmu lebih besar dari semua rasa sakit
+                    yang pernah kamu rasakan. Percayalah pada dirimu, GALANG.
+                </div>
+
+                <div class="bangkit-msg">
+                    🔥 Hari ini, detik ini, ambil napas dalam-dalam. Rasakan udara masuk ke paru-parumu.
+                    Itu adalah bukti bahwa kamu MASIH HIDUP. Dan selama kamu masih hidup,
+                    kamu memiliki kesempatan untuk mengubah SEGALANYA. BANGKIT, GALANG. BANGKIT! 🔥
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 6: ENDING SCREEN
+         ============================================ -->
+    <section id="ending-screen">
+        <div class="ending-fire-bg"></div>
+
+        <div class="ending-content">
+            <div class="ending-symbol">🔥</div>
+
+            <div class="ending-main-text">
+                THE FIRE<br>NEVER DIES
+            </div>
+
+            <div class="ending-subtitle">API TIDAK PERNAH MATI</div>
+
+            <div class="ending-line"></div>
+
+            <div class="ending-name">— GALANG —</div>
+
+            <p class="ending-final-quote">
+                "Dan ketika dunia bertanya siapa yang masih berdiri di tengah badai,
+                jawabannya selalu sama — GALANG. Pejuang yang apinya tidak pernah padam.
+                Sekarang, besok, dan selamanya."
+            </p>
+
+            <div class="ending-line"></div>
+
+            <div class="ending-year">© 2025 — FORGED IN FIRE</div>
+
+            <div style="margin-top: 40px;">
+                <div class="fire-emoji-row">🔥 ⚔️ 🩸 🛡️ 💀 🧱 🔥</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        /* ============================================
+           GLOBAL VARIABLES
+           ============================================ */
+        let isRageMode = false;
+        let isSoundOn = false;
+        let clickCount = 0;
+        let secretRevealed = false;
+        let heartbeatCount = 0;
+        let heartbeatInterval = null;
+        let mouseX = 0;
+        let mouseY = 0;
+        let mouseParticles = [];
+        let ashParticles = [];
+        let fireParticles = [];
+        let embers = [];
+        let loadingProgress = 0;
+        let typingStarted = false;
+        let audioContext = null;
+
+        /* ============================================
+           LOADING SCREEN
+           ============================================ */
+        function initLoading() {
+            const loadingBar = document.getElementById('loading-bar');
+            const loadingPercentage = document.getElementById('loading-percentage');
+            const loadingScreen = document.getElementById('loading-screen');
+
+            let progress = 0;
+            const interval = setInterval(function() {
+                progress += Math.random() * 8 + 2;
+                if (progress > 100) progress = 100;
+
+                loadingBar.style.width = progress + '%';
+                loadingPercentage.textContent = Math.floor(progress) + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        initWebsite();
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        /* ============================================
+           WEBSITE INITIALIZATION
+           ============================================ */
+        function initWebsite() {
+            // Show UI elements
+            document.getElementById('heartbeat-container').style.display = 'flex';
+            document.getElementById('sound-toggle').style.display = 'block';
+            document.getElementById('rage-btn').style.display = 'block';
+            document.getElementById('bangkit-btn').style.display = 'block';
+
+            // Start all systems
+            startHeartbeat();
+            initFireCanvas();
+            initParticleCanvas();
+            initAshCanvas();
+            initMouseFireCanvas();
+            initScrollReveal();
+            initParallax();
+            initLightning();
+            initSecretClick();
+            initStatCounters();
+            initScrollProgress();
+
+            // Start animation loops
+            requestAnimationFrame(mainLoop);
+        }
+
+        /* ============================================
+           HEARTBEAT COUNTER
+           ============================================ */
+        function startHeartbeat() {
+            const heartbeatDisplay = document.getElementById('heartbeat-count');
+            heartbeatInterval = setInterval(function() {
+                heartbeatCount++;
+                heartbeatDisplay.textContent = heartbeatCount.toLocaleString();
+            }, 857); // Average heartbeat ~70 BPM
+        }
+
+        /* ============================================
+           AUDIO CONTEXT & SOUND EFFECTS
+           ============================================ */
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playFireSound() {
+            if (!isSoundOn || !audioContext) return;
+            try {
+                const bufferSize = audioContext.sampleRate * 0.5;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3)) * 0.1;
+                }
+
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 400;
+
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = 0.15;
+
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                source.start();
+            } catch(e) {}
+        }
+
+        function playDramaticSound() {
+            if (!isSoundOn || !audioContext) return;
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(40, audioContext.currentTime + 1);
+
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.5);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 1.5);
+            } catch(e) {}
+        }
+
+        function playBangkitSound() {
+            if (!isSoundOn || !audioContext) return;
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.3);
+                oscillator.frequency.exponentialRampToValueAtTime(60, audioContext.currentTime + 1);
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 1);
+            } catch(e) {}
+        }
+
+        function playThunderSound() {
+            if (!isSoundOn || !audioContext) return;
+            try {
+                const bufferSize = audioContext.sampleRate * 1;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    const envelope = Math.exp(-i / (bufferSize * 0.15));
+                    data[i] = (Math.random() * 2 - 1) * envelope * 0.5;
+                }
+
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 200;
+
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = 0.4;
+
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                source.start();
+            } catch(e) {}
+        }
+
+        function toggleSound() {
+            isSoundOn = !isSoundOn;
+            const btn = document.getElementById('sound-toggle');
+            if (isSoundOn) {
+                initAudioContext();
+                btn.textContent = '🔊 SOUND ON';
+                playFireSound();
+            } else {
+                btn.textContent = '🔇 SOUND OFF';
+            }
+        }
+
+        /* ============================================
+           FIRE CANVAS - BACKGROUND FIRE ANIMATION
+           ============================================ */
+        function initFireCanvas() {
+            const canvas = document.getElementById('fire-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Create fire particles
+            for (let i = 0; i < 150; i++) {
+                fireParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 100,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -(Math.random() * 3 + 1),
+                    size: Math.random() * 4 + 1,
+                    life: Math.random(),
+                    maxLife: 0.5 + Math.random() * 0.5,
+                    color: Math.random()
+                });
+            }
+        }
+
+        function updateFireCanvas() {
+            const canvas = document.getElementById('fire-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw bottom fire glow
+            const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - 300);
+            gradient.addColorStop(0, 'rgba(255, 68, 0, 0.15)');
+            gradient.addColorStop(0.3, 'rgba(255, 34, 0, 0.08)');
+            gradient.addColorStop(0.6, 'rgba(204, 0, 0, 0.03)');
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
+
+            // Update and draw fire particles
+            for (let i = 0; i < fireParticles.length; i++) {
+                const p = fireParticles[i];
+
+                p.x += p.vx + Math.sin(Date.now() * 0.001 + i) * 0.5;
+                p.y += p.vy;
+                p.life -= 0.005;
+
+                if (p.life <= 0 || p.y < -50) {
+                    p.x = Math.random() * canvas.width;
+                    p.y = canvas.height + Math.random() * 50;
+                    p.life = p.maxLife;
+                    p.vx = (Math.random() - 0.5) * 2;
+                    p.vy = -(Math.random() * 3 + 1);
+                }
+
+                const alpha = p.life * 0.6;
+                let r, g, b;
+
+                if (p.color < 0.3) {
+                    r = 255; g = 68; b = 0;
+                } else if (p.color < 0.6) {
+                    r = 255; g = 136; b = 0;
+                } else {
+                    r = 255; g = 204; b = 0;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                ctx.fill();
+
+                // Glow effect
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.2})`;
+                ctx.fill();
+            }
+
+            // Rage mode extra fire
+            if (isRageMode) {
+                for (let i = 0; i < 5; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = canvas.height - Math.random() * 200;
+                    const size = Math.random() * 8 + 2;
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 0, 0, ${Math.random() * 0.5})`;
+                    ctx.fill();
+                }
+            }
+        }
+
+        /* ============================================
+           PARTICLE CANVAS - EMBER PARTICLES
+           ============================================ */
+        function initParticleCanvas() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Create ember particles
+            for (let i = 0; i < 80; i++) {
+                embers.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 1,
+                    vy: -(Math.random() * 1.5 + 0.3),
+                    size: Math.random() * 3 + 0.5,
+                    life: Math.random(),
+                    pulse: Math.random() * Math.PI * 2,
+                    pulseSpeed: Math.random() * 0.05 + 0.01
+                });
+            }
+        }
+
+        function updateParticleCanvas() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < embers.length; i++) {
+                const e = embers[i];
+
+                e.x += e.vx + Math.sin(Date.now() * 0.0005 + i) * 0.3;
+                e.y += e.vy;
+                e.pulse += e.pulseSpeed;
+
+                if (e.y < -20 || e.x < -20 || e.x > canvas.width + 20) {
+                    e.x = Math.random() * canvas.width;
+                    e.y = canvas.height + 20;
+                    e.life = 1;
+                }
+
+                const pulseFactor = 0.5 + Math.sin(e.pulse) * 0.5;
+                const alpha = e.life * pulseFactor * 0.8;
+
+                // Core
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, ${100 + Math.floor(pulseFactor * 100)}, 0, ${alpha})`;
+                ctx.fill();
+
+                // Glow
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, e.size * 4, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 68, 0, ${alpha * 0.15})`;
+                ctx.fill();
+
+                e.life -= 0.001;
+                if (e.life <= 0) e.life = 1;
+            }
+        }
+
+        /* ============================================
+           ASH CANVAS - FALLING ASH SIMULATION
+           ============================================ */
+        function initAshCanvas() {
+            const canvas = document.getElementById('ash-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            for (let i = 0; i < 60; i++) {
+                ashParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: Math.random() * 0.8 + 0.2,
+                    size: Math.random() * 3 + 1,
+                    rotation: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 2,
+                    opacity: Math.random() * 0.3 + 0.1,
+                    wobble: Math.random() * Math.PI * 2,
+                    wobbleSpeed: Math.random() * 0.02 + 0.005
+                });
+            }
+        }
+
+        function updateAshCanvas() {
+            const canvas = document.getElementById('ash-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < ashParticles.length; i++) {
+                const a = ashParticles[i];
+
+                a.wobble += a.wobbleSpeed;
+                a.x += a.vx + Math.sin(a.wobble) * 0.5;
+                a.y += a.vy;
+                a.rotation += a.rotSpeed;
+
+                if (a.y > canvas.height + 20) {
+                    a.y = -20;
+                    a.x = Math.random() * canvas.width;
+                }
+                if (a.x > canvas.width + 20) a.x = -20;
+                if (a.x < -20) a.x = canvas.width + 20;
+
+                ctx.save();
+                ctx.translate(a.x, a.y);
+                ctx.rotate((a.rotation * Math.PI) / 180);
+
+                ctx.beginPath();
+                ctx.ellipse(0, 0, a.size, a.size * 0.6, 0, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(120, 100, 80, ${a.opacity})`;
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        /* ============================================
+           MOUSE FIRE CANVAS - FIRE FOLLOWING MOUSE
+           ============================================ */
+        function initMouseFireCanvas() {
+            const canvas = document.getElementById('mouse-fire-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                // Add new particles at mouse position
+                for (let i = 0; i < 3; i++) {
+                    mouseParticles.push({
+                        x: mouseX + (Math.random() - 0.5) * 10,
+                        y: mouseY + (Math.random() - 0.5) * 10,
+                        vx: (Math.random() - 0.5) * 3,
+                        vy: -(Math.random() * 4 + 1),
+                        size: Math.random() * 4 + 1,
+                        life: 1,
+                        decay: Math.random() * 0.03 + 0.02,
+                        hue: Math.random() * 40
+                    });
+                }
+            });
+        }
+
+        function updateMouseFireCanvas() {
+            const canvas = document.getElementById('mouse-fire-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = mouseParticles.length - 1; i >= 0; i--) {
+                const p = mouseParticles[i];
+
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy -= 0.02; // slight upward acceleration
+                p.life -= p.decay;
+                p.size *= 0.98;
+
+                if (p.life <= 0 || p.size < 0.1) {
+                    mouseParticles.splice(i, 1);
+                    continue;
+                }
+
+                const r = 255;
+                const g = Math.floor(68 + p.hue * 2);
+                const b = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${p.life})`;
+                ctx.fill();
+
+                // Glow
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${p.life * 0.2})`;
+                ctx.fill();
+            }
+
+            // Limit particles
+            if (mouseParticles.length > 200) {
+                mouseParticles.splice(0, mouseParticles.length - 200);
+            }
+        }
+
+        /* ============================================
+           MAIN ANIMATION LOOP
+           ============================================ */
+        function mainLoop() {
+            updateFireCanvas();
+            updateParticleCanvas();
+            updateAshCanvas();
+            updateMouseFireCanvas();
+            requestAnimationFrame(mainLoop);
+        }
+
+        /* ============================================
+           LIGHTNING FLASH EFFECT
+           ============================================ */
+        function initLightning() {
+            triggerLightning();
+        }
+
+        function triggerLightning() {
+            const flash = document.getElementById('lightning-flash');
+            const delay = Math.random() * 15000 + 8000; // 8-23 seconds
+
+            setTimeout(function() {
+                // Flash sequence
+                flash.style.opacity = '0.3';
+                playThunderSound();
+
+                setTimeout(function() {
+                    flash.style.opacity = '0';
+                }, 50);
+
+                setTimeout(function() {
+                    flash.style.opacity = '0.2';
+                }, 100);
+
+                setTimeout(function() {
+                    flash.style.opacity = '0';
+                }, 150);
+
+                setTimeout(function() {
+                    flash.style.opacity = '0.15';
+                }, 300);
+
+                setTimeout(function() {
+                    flash.style.opacity = '0';
+                    triggerLightning(); // Schedule next
+                }, 350);
+            }, delay);
+        }
+
+        /* ============================================
+           SCROLL REVEAL ANIMATION
+           ============================================ */
+        function initScrollReveal() {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+
+                        // Trigger typing animation when typing section is visible
+                        if (entry.target.id === 'typing-section' && !typingStarted) {
+                            typingStarted = true;
+                            startTypingAnimation();
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all elements that need reveal
+            const revealElements = document.querySelectorAll(
+                '.timeline-item, .motivasi-card, .monolog-text, .dark-quote, ' +
+                '.narasi-block, .narasi-big-quote, .bangkit-msg, .ketegasan-item, ' +
+                '.fear-item'
+            );
+
+            revealElements.forEach(function(el) {
+                observer.observe(el);
+            });
+
+            // Also observe typing section
+            const typingSection = document.getElementById('typing-section');
+            if (typingSection) {
+                observer.observe(typingSection);
+            }
+        }
+
+        /* ============================================
+           PARALLAX SCROLLING
+           ============================================ */
+        function initParallax() {
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+
+                // Parallax for opening screen
+                const opening = document.querySelector('.opening-content');
+                if (opening) {
+                    opening.style.transform = `translateY(${scrollY * 0.3}px)`;
+                    opening.style.opacity = 1 - scrollY / 800;
+                }
+
+                // Parallax for warrior
+                const warrior = document.querySelector('.warrior-silhouette');
+                if (warrior) {
+                    warrior.style.transform = `translateX(-50%) translateY(${scrollY * 0.15}px)`;
+                }
+
+                // Section number parallax
+                const sectionNumbers = document.querySelectorAll('.section-number');
+                sectionNumbers.forEach(function(num) {
+                    const rect = num.getBoundingClientRect();
+                    const speed = 0.1;
+                    num.style.transform = `translateY(${(rect.top - window.innerHeight / 2) * speed}px)`;
+                });
+            });
+        }
+
+        /* ============================================
+           TYPING TEXT ANIMATION
+           ============================================ */
+        function startTypingAnimation() {
+            const messages = [
+                "GALANG, kamu lebih kuat dari yang kamu kira...",
+                "Setiap luka adalah medali kehormatan.",
+                "Api dalam dirimu tidak bisa dipadamkan oleh siapapun.",
+                "Kamu bukan manusia biasa — kamu adalah LEGENDA yang sedang ditempa.",
+                "Dunia akan mengingat namamu, GALANG. 🔥",
+                "Bangkit. Berjuang. Menang. Ulangi.",
+                "THE FIRE NEVER DIES."
+            ];
+
+            let messageIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let isPaused = false;
+
+            const typingElement = document.getElementById('typing-text');
+
+            function type() {
+                const currentMessage = messages[messageIndex];
+
+                if (!isDeleting && !isPaused) {
+                    typingElement.textContent = currentMessage.substring(0, charIndex + 1);
+                    charIndex++;
+
+                    if (charIndex === currentMessage.length) {
+                        isPaused = true;
+                        setTimeout(function() {
+                            isPaused = false;
+                            isDeleting = true;
+                            type();
+                        }, 2000);
+                        return;
+                    }
+                } else if (isDeleting) {
+                    typingElement.textContent = currentMessage.substring(0, charIndex - 1);
+                    charIndex--;
+
+                    if (charIndex === 0) {
+                        isDeleting = false;
+                        messageIndex = (messageIndex + 1) % messages.length;
+                    }
+                }
+
+                const speed = isDeleting ? 30 : 50 + Math.random() * 50;
+                setTimeout(type, speed);
+            }
+
+            type();
+        }
+
+        /* ============================================
+           RAGE MODE
+           ============================================ */
+        function toggleRageMode() {
+            isRageMode = !isRageMode;
+            const body = document.body;
+            const btn = document.getElementById('rage-btn');
+
+            if (isRageMode) {
+                body.classList.add('rage-mode');
+                btn.classList.add('active');
+                btn.innerHTML = '💀 RAGE ON';
+                playDramaticSound();
+
+                // Increase fire particles
+                const canvas = document.getElementById('fire-canvas');
+                for (let i = 0; i < 50; i++) {
+                    fireParticles.push({
+                        x: Math.random() * canvas.width,
+                        y: canvas.height + Math.random() * 100,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: -(Math.random() * 5 + 2),
+                        size: Math.random() * 6 + 2,
+                        life: Math.random(),
+                        maxLife: 0.5 + Math.random() * 0.5,
+                        color: Math.random()
+                    });
+                }
+
+                // Screen shake
+                body.classList.add('screen-shake');
+                setTimeout(function() {
+                    body.classList.remove('screen-shake');
+                }, 300);
+            } else {
+                body.classList.remove('rage-mode');
+                btn.classList.remove('active');
+                btn.innerHTML = '🔥 RAGE MODE';
+
+                // Remove extra particles
+                fireParticles.splice(150);
+            }
+        }
+
+        /* ============================================
+           BANGKIT LAGI BUTTON
+           ============================================ */
+        function triggerBangkit() {
+            const overlay = document.getElementById('bangkit-overlay');
+            overlay.classList.add('show');
+            playBangkitSound();
+
+            // Screen shake
+            document.body.classList.add('screen-shake');
+
+            // Flash effect
+            const flash = document.getElementById('lightning-flash');
+            flash.style.opacity = '0.5';
+            flash.style.background = 'rgba(255, 68, 0, 0.8)';
+
+            setTimeout(function() {
+                flash.style.opacity = '0';
+                flash.style.background = 'white';
+                document.body.classList.remove('screen-shake');
+            }, 200);
+
+            // Create burst of particles
+            for (let i = 0; i < 30; i++) {
+                mouseParticles.push({
+                    x: window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+                    y: window.innerHeight / 2 + (Math.random() - 0.5) * 200,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.5) * 15,
+                    size: Math.random() * 8 + 2,
+                    life: 1,
+                    decay: 0.01,
+                    hue: Math.random() * 40
+                });
+            }
+
+            setTimeout(function() {
+                overlay.classList.remove('show');
+            }, 2000);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ============================================
+           SECRET MESSAGE (CLICK COUNTER)
+           ============================================ */
+        function initSecretClick() {
+            const openingTitle = document.querySelector('.opening-title');
+            if (openingTitle) {
+                openingTitle.style.cursor = 'pointer';
+                openingTitle.addEventListener('click', function() {
+                    clickCount++;
+
+                    if (clickCount >= 7 && !secretRevealed) {
+                        secretRevealed = true;
+                        revealSecret();
+                    } else if (clickCount < 7) {
+                        // Visual feedback
+                        this.classList.add('flash-text');
+                        setTimeout(() => {
+                            this.classList.remove('flash-text');
+                        }, 300);
+
+                        // Small screen shake
+                        document.body.classList.add('screen-shake');
+                        setTimeout(function() {
+                            document.body.classList.remove('screen-shake');
+                        }, 300);
+                    }
+                });
+            }
+        }
+
+        function revealSecret() {
+            const container = document.getElementById('secret-container');
+            container.classList.add('show');
+            playDramaticSound();
+
+            // Epic flash
+            const flash = document.getElementById('lightning-flash');
+            flash.style.opacity = '0.8';
+            setTimeout(function() {
+                flash.style.opacity = '0';
+            }, 200);
+        }
+
+        function closeSecret() {
+            const container = document.getElementById('secret-container');
+            container.classList.remove('show');
+        }
+
+        /* ============================================
+           STAT COUNTERS ANIMATION
+           ============================================ */
+        function initStatCounters() {
+            const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        const target = entry.target.getAttribute('data-target');
+                        if (target === '∞') return;
+
+                        const targetNum = parseInt(target);
+                        let current = 0;
+                        const increment = targetNum / 60;
+                        const duration = 2000;
+                        const stepTime = duration / 60;
+
+                        const counter = setInterval(function() {
+                            current += increment;
+                            if (current >= targetNum) {
+                                current = targetNum;
+                                clearInterval(counter);
+                            }
+                            entry.target.textContent = Math.floor(current);
+                        }, stepTime);
+
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            statNumbers.forEach(function(el) {
+                observer.observe(el);
+            });
+        }
+
+        /* ============================================
+           SCROLL PROGRESS BAR
+           ============================================ */
+        function initScrollProgress() {
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = (scrollTop / docHeight) * 100;
+                document.getElementById('progress-bar').style.width = progress + '%';
+            });
+        }
+
+        /* ============================================
+           TOUCH SUPPORT FOR MOBILE
+           ============================================ */
+        document.addEventListener('touchmove', function(e) {
+            const touch = e.touches[0];
+            mouseX = touch.clientX;
+            mouseY = touch.clientY;
+
+            for (let i = 0; i < 2; i++) {
+                mouseParticles.push({
+                    x: mouseX + (Math.random() - 0.5) * 10,
+                    y: mouseY + (Math.random() - 0.5) * 10,
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: -(Math.random() * 4 + 1),
+                    size: Math.random() * 4 + 1,
+                    life: 1,
+                    decay: Math.random() * 0.03 + 0.02,
+                    hue: Math.random() * 40
+                });
+            }
+        });
+
+        /* ============================================
+           CLICK FIRE BURST
+           ============================================ */
+        document.addEventListener('click', function(e) {
+            for (let i = 0; i < 15; i++) {
+                const angle = (Math.PI * 2 * i) / 15;
+                const speed = Math.random() * 5 + 2;
+                mouseParticles.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 5 + 1,
+                    life: 1,
+                    decay: 0.02,
+                    hue: Math.random() * 40
+                });
+            }
+        });
+
+        /* ============================================
+           KEYBOARD SHORTCUTS
+           ============================================ */
+        document.addEventListener('keydown', function(e) {
+            // 'R' for Rage Mode
+            if (e.key === 'r' || e.key === 'R') {
+                toggleRageMode();
+            }
+            // 'B' for Bangkit
+            if (e.key === 'b' || e.key === 'B') {
+                triggerBangkit();
+            }
+            // 'S' for Sound
+            if (e.key === 's' || e.key === 'S') {
+                toggleSound();
+            }
+        });
+
+        /* ============================================
+           SUBTLE SCREEN SHAKE ON SCROLL
+           ============================================ */
+        let lastScrollY = 0;
+        let scrollVelocity = 0;
+
+        window.addEventListener('scroll', function() {
+            const currentScrollY = window.scrollY;
+            scrollVelocity = Math.abs(currentScrollY - lastScrollY);
+            lastScrollY = currentScrollY;
+
+            // Subtle shake on fast scroll
+            if (scrollVelocity > 50) {
+                const offset = Math.min(scrollVelocity * 0.02, 2);
+                document.body.style.transform = `translateX(${(Math.random() - 0.5) * offset}px)`;
+                setTimeout(function() {
+                    document.body.style.transform = 'none';
+                }, 50);
+            }
+        });
+
+        /* ============================================
+           DYNAMIC FIRE COLOR BASED ON SCROLL
+           ============================================ */
+        window.addEventListener('scroll', function() {
+            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+
+            // Change fire canvas opacity based on scroll position
+            const fireCanvas = document.getElementById('fire-canvas');
+            fireCanvas.style.opacity = 0.3 + scrollPercent * 0.5;
+        });
+
+        /* ============================================
+           KONAMI CODE EASTER EGG
+           ============================================ */
+        let konamiSequence = [];
+        const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+
+        document.addEventListener('keydown', function(e) {
+            konamiSequence.push(e.keyCode);
+            if (konamiSequence.length > konamiCode.length) {
+                konamiSequence.shift();
+            }
+
+            if (JSON.stringify(konamiSequence) === JSON.stringify(konamiCode)) {
+                // SUPER RAGE MODE
+                if (!isRageMode) toggleRageMode();
+                triggerBangkit();
+
+                // Massive particle burst
+                for (let i = 0; i < 100; i++) {
+                    mouseParticles.push({
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        vx: (Math.random() - 0.5) * 20,
+                        vy: (Math.random() - 0.5) * 20,
+                        size: Math.random() * 10 + 2,
+                        life: 1,
+                        decay: 0.005,
+                        hue: Math.random() * 40
+                    });
+                }
+
+                konamiSequence = [];
+            }
+        });
+
+        /* ============================================
+           AUTO-PLAY AMBIENT FIRE SOUND
+           ============================================ */
+        let ambientInterval = null;
+
+        function startAmbientSound() {
+            if (!isSoundOn) return;
+            ambientInterval = setInterval(function() {
+                if (isSoundOn) playFireSound();
+            }, 5000);
+        }
+
+        /* ============================================
+           FLOATING EMBER DOM ELEMENTS
+           ============================================ */
+        function createFloatingEmber() {
+            const ember = document.createElement('div');
+            ember.className = 'floating-ember';
+            ember.style.left = Math.random() * 100 + '%';
+            ember.style.bottom = '-5px';
+            ember.style.opacity = Math.random() * 0.6 + 0.2;
+
+            const size = Math.random() * 3 + 1;
+            ember.style.width = size + 'px';
+            ember.style.height = size + 'px';
+
+            document.body.appendChild(ember);
+
+            const duration = Math.random() * 8000 + 5000;
+            const xDrift = (Math.random() - 0.5) * 200;
+
+            ember.animate([
+                {
+                    transform: 'translateY(0) translateX(0)',
+                    opacity: parseFloat(ember.style.opacity)
+                },
+                {
+                    transform: `translateY(-${window.innerHeight + 100}px) translateX(${xDrift}px)`,
+                    opacity: 0
+                }
+            ], {
+                duration: duration,
+                easing: 'ease-out'
+            }).onfinish = function() {
+                ember.remove();
+            };
+        }
+
+        // Create embers periodically
+        setInterval(createFloatingEmber, 500);
+
+        /* ============================================
+           VISIBILITY API - PAUSE/RESUME
+           ============================================ */
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Page is hidden, could pause animations
+            } else {
+                // Page is visible again
+            }
+        });
+
+        /* ============================================
+           RESIZE HANDLER
+           ============================================ */
+        window.addEventListener('resize', function() {
+            const canvases = ['fire-canvas', 'particle-canvas', 'ash-canvas', 'mouse-fire-canvas'];
+            canvases.forEach(function(id) {
+                const canvas = document.getElementById(id);
+                if (canvas) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+            });
+        });
+
+        /* ============================================
+           INITIALIZATION ON DOM LOAD
+           ============================================ */
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoading();
+        });
+
+        /* ============================================
+           SMOOTH SCROLL FOR INTERNAL LINKS
+           ============================================ */
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        /* ============================================
+           CONTEXT MENU OVERRIDE (OPTIONAL)
+           ============================================ */
+        document.addEventListener('contextmenu', function(e) {
+            // Allow normal context menu
+        });
+
+        /* ============================================
+           PERFORMANCE MONITORING
+           ============================================ */
+        let frameCount = 0;
+        let lastFPSTime = performance.now();
+
+        function checkPerformance() {
+            frameCount++;
+            const now = performance.now();
+            if (now - lastFPSTime >= 1000) {
+                const fps = frameCount;
+                frameCount = 0;
+                lastFPSTime = now;
+
+                // If FPS is too low, reduce particles
+                if (fps < 30) {
+                    if (fireParticles.length > 50) {
+                        fireParticles.splice(50);
+                    }
+                    if (embers.length > 30) {
+                        embers.splice(30);
+                    }
+                    if (ashParticles.length > 20) {
+                        ashParticles.splice(20);
+                    }
+                }
+            }
+            requestAnimationFrame(checkPerformance);
+        }
+        requestAnimationFrame(checkPerformance);
+
+        /* ============================================
+           EXTRA: DOUBLE CLICK EXPLOSION
+           ============================================ */
+        document.addEventListener('dblclick', function(e) {
+            // Create a burst of fire
+            for (let i = 0; i < 40; i++) {
+                const angle = (Math.PI * 2 * i) / 40;
+                const speed = Math.random() * 10 + 3;
+                mouseParticles.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 3,
+                    size: Math.random() * 7 + 2,
+                    life: 1,
+                    decay: 0.01,
+                    hue: Math.random() * 60
+                });
+            }
+
+            // Screen shake
+            document.body.classList.add('screen-shake');
+            setTimeout(function() {
+                document.body.classList.remove('screen-shake');
+            }, 300);
+
+            playDramaticSound();
+        });
+
+        /* ============================================
+           EXTRA: SCROLL-TRIGGERED SOUND
+           ============================================ */
+        let lastSoundScroll = 0;
+        window.addEventListener('scroll', function() {
+            const scrollY = window.scrollY;
+            if (Math.abs(scrollY - lastSoundScroll) > 500) {
+                lastSoundScroll = scrollY;
+                if (isSoundOn && audioContext) {
+                    // Subtle fire crackle
+                    try {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(
+                            200 + Math.random() * 100,
+                            audioContext.currentTime
+                        );
+                        gainNode.gain.setValueAtTime(0.02, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.2);
+                    } catch(e) {}
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+

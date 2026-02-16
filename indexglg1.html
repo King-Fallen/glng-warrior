@@ -1,0 +1,5258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALANG - The Fire Never Dies 🔥</title>
+    <style>
+        /* ============================================
+           SECTION 1: CSS RESET & ROOT VARIABLES
+           ============================================ */
+        
+        :root {
+            /* Primary Colors - Fire Theme */
+            --color-black: #000000;
+            --color-dark: #0a0a0a;
+            --color-darker: #050505;
+            --color-red-dark: #8B0000;
+            --color-red: #DC143C;
+            --color-red-bright: #FF0000;
+            --color-orange: #FF4500;
+            --color-orange-bright: #FF6B35;
+            --color-yellow: #FFD700;
+            --color-ember: #FF8C00;
+            
+            /* Gradients */
+            --gradient-fire: linear-gradient(180deg, #000 0%, #1a0000 30%, #330000 60%, #4d0000 100%);
+            --gradient-ember: linear-gradient(45deg, #FF4500, #FF6B35, #FFD700);
+            --gradient-text: linear-gradient(90deg, #FF4500, #FFD700, #FF4500);
+            
+            /* Shadows & Glows */
+            --glow-red: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 69, 0, 0.3);
+            --glow-orange: 0 0 15px rgba(255, 140, 0, 0.6);
+            --text-shadow-fire: 0 0 10px #FF4500, 0 0 20px #FF6B35, 0 0 30px #FF8C00;
+            
+            /* Typography */
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-display: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            
+            /* Spacing */
+            --section-padding: 100px 0;
+            
+            /* Transitions */
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.5s ease;
+            --transition-slow: 1s ease;
+        }
+
+        /* ============================================
+           SECTION 2: CSS RESET
+           ============================================ */
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--color-black);
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: default;
+            line-height: 1.6;
+        }
+
+        body.rage-mode {
+            animation: rageBackground 0.5s infinite alternate;
+        }
+
+        body.shake {
+            animation: screenShake 0.5s ease-in-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--color-red), var(--color-orange));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--color-orange), var(--color-yellow));
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--color-red);
+            color: white;
+        }
+
+        /* ============================================
+           SECTION 3: KEYFRAME ANIMATIONS
+           ============================================ */
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            25%, 75% { opacity: 0.9; }
+        }
+
+        @keyframes fireGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 69, 0, 0.5),
+                            0 0 40px rgba(255, 69, 0, 0.3),
+                            0 0 60px rgba(255, 140, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 69, 0, 0.7),
+                            0 0 50px rgba(255, 69, 0, 0.5),
+                            0 0 80px rgba(255, 140, 0, 0.3);
+            }
+        }
+
+        @keyframes textBurn {
+            0%, 100% {
+                text-shadow: 0 0 10px #FF4500,
+                            0 0 20px #FF6B35,
+                            0 0 30px #FF8C00,
+                            0 0 40px #FFD700;
+            }
+            50% {
+                text-shadow: 0 0 20px #FF4500,
+                            0 0 40px #FF6B35,
+                            0 0 60px #FF8C00,
+                            0 0 80px #FFD700;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes screenShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes rageBackground {
+            0% { background-color: #0a0000; }
+            100% { background-color: #1a0000; }
+        }
+
+        @keyframes lightning {
+            0%, 100% { opacity: 0; }
+            5%, 10% { opacity: 1; }
+            15% { opacity: 0; }
+            20%, 25% { opacity: 0.8; }
+            30% { opacity: 0; }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: var(--color-orange); }
+        }
+
+        @keyframes ember-rise {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ash-fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes smoke-rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-200px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                border-color: var(--color-red);
+                box-shadow: 0 0 10px var(--color-red);
+            }
+            50% {
+                border-color: var(--color-orange);
+                box-shadow: 0 0 20px var(--color-orange);
+            }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes revealFromDark {
+            0% {
+                clip-path: inset(0 100% 0 0);
+                opacity: 0;
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes burnReveal {
+            0% {
+                filter: brightness(0);
+                transform: scale(0.9);
+            }
+            50% {
+                filter: brightness(2);
+            }
+            100% {
+                filter: brightness(1);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glitchText {
+            0%, 100% {
+                transform: translate(0);
+                text-shadow: var(--text-shadow-fire);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+                text-shadow: -2px 0 #FF0000, 2px 0 #00FFFF;
+            }
+            40% {
+                transform: translate(2px, -2px);
+                text-shadow: 2px 0 #FF0000, -2px 0 #00FFFF;
+            }
+            60% {
+                transform: translate(-2px, -2px);
+            }
+            80% {
+                transform: translate(2px, 2px);
+            }
+        }
+
+        @keyframes expandLine {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.02); }
+        }
+
+        /* ============================================
+           SECTION 4: LOADING SCREEN
+           ============================================ */
+        
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-fire-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-fire {
+            position: absolute;
+            bottom: 20px;
+            width: 100px;
+            height: 150px;
+        }
+
+        .loading-flame {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flameWave 0.5s ease-in-out infinite alternate;
+        }
+
+        .loading-flame.main {
+            width: 60px;
+            height: 100px;
+            background: linear-gradient(to top, #FF4500, #FFD700, transparent);
+            animation-delay: 0s;
+        }
+
+        .loading-flame.left {
+            width: 40px;
+            height: 70px;
+            left: 30%;
+            background: linear-gradient(to top, #FF6B35, #FF8C00, transparent);
+            animation-delay: 0.1s;
+        }
+
+        .loading-flame.right {
+            width: 40px;
+            height: 70px;
+            left: 70%;
+            background: linear-gradient(to top, #FF6B35, #FF8C00, transparent);
+            animation-delay: 0.2s;
+        }
+
+        @keyframes flameWave {
+            0% {
+                transform: translateX(-50%) scaleY(1) scaleX(1);
+                filter: brightness(1);
+            }
+            100% {
+                transform: translateX(-50%) scaleY(1.1) scaleX(0.9);
+                filter: brightness(1.2);
+            }
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--color-orange);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            animation: textBurn 1s ease-in-out infinite;
+        }
+
+        .loading-progress {
+            width: 300px;
+            height: 4px;
+            background: var(--color-dark);
+            border-radius: 2px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-red), var(--color-orange), var(--color-yellow));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--color-orange);
+        }
+
+        .loading-percentage {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: var(--color-ember);
+            font-weight: bold;
+        }
+
+        /* ============================================
+           SECTION 5: CANVAS ELEMENTS
+           ============================================ */
+        
+        #fire-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #mouse-fire-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        #ash-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* ============================================
+           SECTION 6: LIGHTNING EFFECT
+           ============================================ */
+        
+        .lightning-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.05s ease;
+        }
+
+        .lightning-overlay.flash {
+            animation: lightning 0.3s ease;
+        }
+
+        /* ============================================
+           SECTION 7: MAIN CONTENT WRAPPER
+           ============================================ */
+        
+        .main-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ============================================
+           SECTION 8: OPENING DRAMATIC SCREEN
+           ============================================ */
+        
+        #opening-screen {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, 
+                #000000 0%, 
+                #0a0000 20%, 
+                #150000 40%, 
+                #1f0000 60%, 
+                #2a0000 80%, 
+                #350000 100%);
+            overflow: hidden;
+        }
+
+        .opening-bg-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center bottom, 
+                rgba(255, 69, 0, 0.3) 0%, 
+                transparent 50%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .opening-title-container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .opening-subtitle {
+            font-size: 1.5rem;
+            color: var(--color-ember);
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .opening-title {
+            font-family: var(--font-display);
+            font-size: 8rem;
+            color: transparent;
+            background: linear-gradient(180deg, #FFD700, #FF4500, #DC143C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 20px;
+            animation: textBurn 2s ease-in-out infinite, scaleIn 1s ease forwards;
+            text-shadow: 0 0 50px rgba(255, 69, 0, 0.5);
+        }
+
+        .opening-tagline {
+            font-size: 1.8rem;
+            color: #aaa;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .opening-tagline span {
+            color: var(--color-orange);
+            font-weight: bold;
+        }
+
+        .opening-divider {
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-orange), transparent);
+            margin: 40px auto;
+            animation: expandLine 1.5s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        .opening-quote {
+            max-width: 800px;
+            font-size: 1.4rem;
+            color: #888;
+            text-align: center;
+            padding: 0 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 2s;
+            line-height: 1.8;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards, float 2s ease-in-out infinite;
+            animation-delay: 2.5s, 2.5s;
+        }
+
+        .scroll-indicator span {
+            color: var(--color-ember);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .scroll-arrow {
+            width: 30px;
+            height: 30px;
+            border-right: 3px solid var(--color-orange);
+            border-bottom: 3px solid var(--color-orange);
+            transform: rotate(45deg);
+            animation: float 1.5s ease-in-out infinite;
+        }
+
+        /* ============================================
+           SECTION 9: HERO SECTION
+           ============================================ */
+        
+        #hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #350000 0%, #000 100%);
+            overflow: hidden;
+        }
+
+        .hero-bg-fire {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: radial-gradient(ellipse at center bottom, 
+                rgba(255, 69, 0, 0.4) 0%, 
+                rgba(255, 69, 0, 0.1) 30%, 
+                transparent 60%);
+            animation: fireGlow 3s ease-in-out infinite;
+        }
+
+        .hero-silhouette {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 400px;
+            background: linear-gradient(to top, 
+                rgba(0, 0, 0, 1) 0%, 
+                rgba(0, 0, 0, 0.9) 50%, 
+                transparent 100%);
+            clip-path: polygon(50% 0%, 65% 20%, 70% 40%, 75% 60%, 80% 80%, 85% 100%, 15% 100%, 20% 80%, 25% 60%, 30% 40%, 35% 20%);
+            z-index: 5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero-name-prefix {
+            font-size: 1.5rem;
+            color: var(--color-ember);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            margin-bottom: 10px;
+        }
+
+        .hero-name {
+            font-family: var(--font-display);
+            font-size: 6rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            text-shadow: var(--text-shadow-fire);
+            animation: textBurn 2s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+            color: var(--color-orange);
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+        }
+
+        .hero-description {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.3rem;
+            color: #bbb;
+            line-height: 1.8;
+        }
+
+        .hero-description strong {
+            color: var(--color-orange);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--color-orange);
+            text-shadow: 0 0 20px var(--color-orange);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        /* ============================================
+           SECTION 10: JOURNEY SECTION (PARALLAX)
+           ============================================ */
+        
+        #journey-section {
+            position: relative;
+            padding: 150px 0;
+            background: var(--color-black);
+            overflow: hidden;
+        }
+
+        .journey-parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="%23FF4500" opacity="0.3"/></svg>');
+            background-size: 50px 50px;
+            opacity: 0.3;
+        }
+
+        .journey-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .journey-header {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .section-emoji {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow-fire);
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--color-ember);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .journey-timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .journey-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                var(--color-red) 0%, 
+                var(--color-orange) 50%, 
+                var(--color-yellow) 100%);
+            border-radius: 2px;
+            box-shadow: 0 0 20px var(--color-orange);
+        }
+
+        .journey-item {
+            position: relative;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .journey-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .journey-item::before {
+            content: '🔥';
+            position: absolute;
+            left: -62px;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .journey-phase {
+            font-size: 0.9rem;
+            color: var(--color-orange);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .journey-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .journey-text {
+            font-size: 1.1rem;
+            color: #aaa;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .journey-quote {
+            padding: 20px;
+            background: rgba(255, 69, 0, 0.1);
+            border-left: 4px solid var(--color-orange);
+            font-style: italic;
+            color: var(--color-ember);
+        }
+
+        /* ============================================
+           SECTION 11: MOTIVATION QUOTES SECTION
+           ============================================ */
+        
+        #quotes-section {
+            position: relative;
+            padding: 150px 0;
+            background: linear-gradient(180deg, #000 0%, #1a0000 50%, #000 100%);
+            overflow: hidden;
+        }
+
+        .quotes-fire-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(ellipse at center, 
+                rgba(255, 69, 0, 0.15) 0%, 
+                transparent 50%);
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        .quotes-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .quotes-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .quote-card {
+            background: linear-gradient(135deg, 
+                rgba(20, 0, 0, 0.9) 0%, 
+                rgba(40, 0, 0, 0.9) 100%);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .quote-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .quote-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--color-red), var(--color-orange), var(--color-yellow));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(255, 69, 0, 0.3);
+        }
+
+        .quote-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .quote-text {
+            font-size: 1.8rem;
+            color: white;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .quote-text strong {
+            color: var(--color-orange);
+            font-weight: bold;
+        }
+
+        .quote-text .highlight {
+            background: linear-gradient(90deg, var(--color-red), var(--color-orange));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+
+        .quote-emoji-row {
+            display: flex;
+            gap: 15px;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        /* ============================================
+           SECTION 12: LONG MOTIVATION SECTION
+           ============================================ */
+        
+        #motivation-section {
+            position: relative;
+            padding: 150px 0;
+            background: var(--color-black);
+            overflow: hidden;
+        }
+
+        .motivation-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center top, 
+                rgba(255, 69, 0, 0.2) 0%, 
+                transparent 40%);
+        }
+
+        .motivation-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .motivation-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .motivation-content {
+            background: linear-gradient(180deg, 
+                rgba(30, 0, 0, 0.8) 0%, 
+                rgba(20, 0, 0, 0.9) 50%, 
+                rgba(10, 0, 0, 0.95) 100%);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            border-radius: 30px;
+            padding: 60px;
+            position: relative;
+        }
+
+        .motivation-content::before {
+            content: '🔥';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .motivation-paragraph {
+            font-size: 1.3rem;
+            color: #ccc;
+            line-height: 2;
+            margin-bottom: 30px;
+            text-align: justify;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .motivation-paragraph.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .motivation-paragraph strong {
+            color: var(--color-orange);
+        }
+
+        .motivation-paragraph .name {
+            color: var(--color-yellow);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .motivation-emphasis {
+            display: block;
+            font-size: 1.6rem;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin: 40px 0;
+            background: rgba(255, 69, 0, 0.1);
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .motivation-list {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .motivation-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #bbb;
+        }
+
+        .motivation-list li span {
+            font-size: 1.5rem;
+        }
+
+        /* ============================================
+           SECTION 13: MONOLOG SECTION
+           ============================================ */
+        
+        #monolog-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #000 0%, #150000 50%, #000 100%);
+            overflow: hidden;
+        }
+
+        .monolog-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, 
+                rgba(255, 69, 0, 0.1) 0%, 
+                transparent 50%);
+        }
+
+        .monolog-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 100px 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .monolog-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .monolog-content {
+            position: relative;
+        }
+
+        .monolog-text {
+            font-size: 1.4rem;
+            color: #aaa;
+            line-height: 2.2;
+            margin-bottom: 40px;
+            text-align: center;
+            font-style: italic;
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .monolog-text.visible {
+            opacity: 1;
+        }
+
+        .monolog-text.highlight-text {
+            color: white;
+            font-size: 1.8rem;
+            font-style: normal;
+            font-weight: bold;
+            text-shadow: var(--text-shadow-fire);
+        }
+
+        .typing-container {
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .typing-text {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: var(--color-orange);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            border-right: 3px solid var(--color-orange);
+            padding-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink 0.7s infinite;
+        }
+
+        /* ============================================
+           SECTION 14: DARK EXTREME MODE SECTION
+           ============================================ */
+        
+        #dark-mode-section {
+            position: relative;
+            padding: 150px 0;
+            background: var(--color-black);
+            overflow: hidden;
+        }
+
+        .dark-mode-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dark-mode-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .dark-mode-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .dark-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .dark-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .dark-card:hover {
+            border-color: var(--color-orange);
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.3);
+            transform: translateY(-10px);
+        }
+
+        .dark-card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .dark-card-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .dark-card-text {
+            font-size: 1.1rem;
+            color: #888;
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           SECTION 15: INTERACTIVE BUTTONS SECTION
+           ============================================ */
+        
+        #interactive-section {
+            position: relative;
+            padding: 150px 0;
+            background: linear-gradient(180deg, #000 0%, #1a0000 50%, #000 100%);
+            overflow: hidden;
+        }
+
+        .interactive-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .interactive-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .interactive-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .fire-button {
+            position: relative;
+            padding: 20px 50px;
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: white;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF4500 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+        }
+
+        .fire-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .fire-button:hover::before {
+            left: 100%;
+        }
+
+        .fire-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 69, 0, 0.6);
+        }
+
+        .fire-button:active {
+            transform: scale(0.95);
+        }
+
+        .fire-button.rage-btn {
+            background: linear-gradient(135deg, #8B0000 0%, #FF0000 100%);
+            animation: pulse 1s infinite;
+        }
+
+        .fire-button.bangkit-btn {
+            background: linear-gradient(135deg, #FF4500 0%, #FFD700 100%);
+        }
+
+        .heartbeat-container {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .heartbeat-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .heart-icon {
+            font-size: 4rem;
+            animation: heartbeat 1s infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+        }
+
+        .heart-counter {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: var(--color-red-bright);
+            text-shadow: 0 0 20px var(--color-red);
+        }
+
+        .heart-label {
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1rem;
+        }
+
+        /* Secret Message */
+        .secret-container {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .secret-button {
+            padding: 15px 40px;
+            font-size: 1rem;
+            color: #666;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secret-button:hover {
+            border-color: #666;
+            color: #888;
+        }
+
+        .secret-message {
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 69, 0, 0.1);
+            border: 2px solid var(--color-orange);
+            border-radius: 20px;
+            display: none;
+            animation: scaleIn 0.5s ease;
+        }
+
+        .secret-message.revealed {
+            display: block;
+        }
+
+        .secret-message h3 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--color-orange);
+            margin-bottom: 15px;
+        }
+
+        .secret-message p {
+            font-size: 1.2rem;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        /* ============================================
+           SECTION 16: FINAL MOTIVATION SECTION
+           ============================================ */
+        
+        #final-motivation-section {
+            position: relative;
+            padding: 150px 0;
+            background: var(--color-black);
+            overflow: hidden;
+        }
+
+        .final-glow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(ellipse at center bottom, 
+                rgba(255, 69, 0, 0.3) 0%, 
+                transparent 50%);
+        }
+
+        .final-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .final-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, 
+                rgba(50, 0, 0, 0.9) 0%, 
+                rgba(30, 0, 0, 0.9) 100%);
+            border: 2px solid var(--color-red);
+            border-radius: 30px;
+            padding: 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-message::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .final-emoji-row {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+
+        .final-text {
+            font-size: 1.5rem;
+            color: #ccc;
+            line-height: 2;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-text strong {
+            color: var(--color-orange);
+        }
+
+        .final-text .name {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--color-yellow);
+        }
+
+        .final-signature {
+            font-style: italic;
+            color: var(--color-ember);
+            font-size: 1.2rem;
+        }
+
+        /* ============================================
+           SECTION 17: ENDING SCREEN
+           ============================================ */
+        
+        #ending-screen {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #000 0%, #1a0000 30%, #2a0000 60%, #3a0000 100%);
+            overflow: hidden;
+        }
+
+        .ending-fire-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: radial-gradient(ellipse at center bottom, 
+                rgba(255, 69, 0, 0.5) 0%, 
+                rgba(255, 69, 0, 0.2) 30%, 
+                transparent 60%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .ending-content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .ending-emoji {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ending-title {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            color: transparent;
+            background: linear-gradient(180deg, #FFD700, #FF4500, #DC143C, #8B0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            animation: textBurn 2s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .ending-subtitle {
+            font-size: 2rem;
+            color: var(--color-ember);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            margin-bottom: 40px;
+        }
+
+        .ending-line {
+            width: 200px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--color-orange), transparent);
+            margin: 40px auto;
+        }
+
+        .ending-quote {
+            max-width: 600px;
+            font-size: 1.5rem;
+            color: #aaa;
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .ending-quote strong {
+            color: var(--color-orange);
+        }
+
+        .ending-year {
+            margin-top: 60px;
+            font-size: 1.2rem;
+            color: #555;
+            letter-spacing: 5px;
+        }
+
+        .restart-button {
+            margin-top: 40px;
+            padding: 15px 40px;
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--color-orange);
+            background: transparent;
+            border: 2px solid var(--color-orange);
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-button:hover {
+            background: var(--color-orange);
+            color: black;
+            box-shadow: 0 0 30px var(--color-orange);
+        }
+
+        /* ============================================
+           SECTION 18: SMOKE EFFECT
+           ============================================ */
+        
+        .smoke-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            pointer-events: none;
+            z-index: 4;
+            overflow: hidden;
+        }
+
+        .smoke-particle {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, 
+                rgba(100, 100, 100, 0.3) 0%, 
+                transparent 70%);
+            border-radius: 50%;
+            animation: smoke-rise 5s ease-out infinite;
+        }
+
+        /* ============================================
+           SECTION 19: EMBER PARTICLES
+           ============================================ */
+        
+        .ember-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .ember {
+            position: absolute;
+            bottom: -10px;
+            width: 6px;
+            height: 6px;
+            background: var(--color-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--color-orange), 0 0 20px var(--color-yellow);
+            animation: ember-rise 8s ease-out infinite;
+        }
+
+        /* ============================================
+           SECTION 20: ASH PARTICLES
+           ============================================ */
+        
+        .ash-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        .ash {
+            position: absolute;
+            top: -10px;
+            width: 4px;
+            height: 4px;
+            background: #666;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: ash-fall 10s linear infinite;
+        }
+
+        /* ============================================
+           SECTION 21: RAGE MODE OVERLAY
+           ============================================ */
+        
+        .rage-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, 
+                rgba(255, 0, 0, 0.3) 0%, 
+                rgba(139, 0, 0, 0.5) 50%, 
+                rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .rage-overlay.active {
+            opacity: 1;
+            animation: rageBackground 0.3s infinite alternate;
+        }
+
+        /* ============================================
+           SECTION 22: NAVIGATION
+           ============================================ */
+        
+        .floating-nav {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 69, 0, 0.3);
+            border: 2px solid var(--color-orange);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--color-orange);
+            box-shadow: 0 0 15px var(--color-orange);
+            transform: scale(1.3);
+        }
+
+        .nav-dot::before {
+            content: attr(data-label);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--color-orange);
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover::before {
+            opacity: 1;
+            visibility: visible;
+            right: 30px;
+        }
+
+        /* ============================================
+           SECTION 23: SCROLL REVEAL ANIMATIONS
+           ============================================ */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ============================================
+           SECTION 24: ADDITIONAL QUOTE STYLES
+           ============================================ */
+        
+        .power-quote {
+            position: relative;
+            padding: 40px;
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .power-quote::before,
+        .power-quote::after {
+            content: '🔥';
+            position: absolute;
+            font-size: 2rem;
+        }
+
+        .power-quote::before {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .power-quote::after {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .power-quote-text {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: var(--text-shadow-fire);
+            line-height: 1.4;
+        }
+
+        /* ============================================
+           SECTION 25: WARRIOR SECTION
+           ============================================ */
+        
+        #warrior-section {
+            position: relative;
+            padding: 150px 0;
+            background: linear-gradient(180deg, #000 0%, #150000 100%);
+            overflow: hidden;
+        }
+
+        .warrior-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 30%),
+                radial-gradient(ellipse at 80% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 30%);
+        }
+
+        .warrior-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .warrior-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .warrior-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .warrior-item {
+            background: linear-gradient(135deg, rgba(20, 0, 0, 0.9) 0%, rgba(40, 0, 0, 0.9) 100%);
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .warrior-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .warrior-item:hover {
+            border-color: var(--color-orange);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 69, 0, 0.3);
+        }
+
+        .warrior-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .warrior-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-orange);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .warrior-text {
+            font-size: 1rem;
+            color: #999;
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           SECTION 26: MANIFESTO SECTION
+           ============================================ */
+        
+        #manifesto-section {
+            position: relative;
+            padding: 150px 0;
+            background: var(--color-black);
+            overflow: hidden;
+        }
+
+        .manifesto-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .manifesto-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .manifesto-content {
+            position: relative;
+        }
+
+        .manifesto-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 69, 0, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid var(--color-orange);
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.8s ease;
+        }
+
+        .manifesto-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .manifesto-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--color-orange);
+            text-shadow: 0 0 20px var(--color-orange);
+            line-height: 1;
+        }
+
+        .manifesto-text {
+            font-size: 1.3rem;
+            color: #ccc;
+            line-height: 1.7;
+        }
+
+        .manifesto-text strong {
+            color: white;
+        }
+
+        /* ============================================
+           SECTION 27: BATTLE CRY SECTION
+           ============================================ */
+        
+        #battlecry-section {
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #000 0%, #200000 50%, #000 100%);
+            overflow: hidden;
+        }
+
+        .battlecry-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, 
+                rgba(255, 69, 0, 0.2) 0%, 
+                transparent 50%);
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        .battlecry-content {
+            text-align: center;
+            z-index: 10;
+            padding: 40px;
+        }
+
+        .battlecry-emoji {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .battlecry-text {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            text-shadow: var(--text-shadow-fire);
+            animation: textBurn 2s ease-in-out infinite;
+            line-height: 1.3;
+        }
+
+        .battlecry-sub {
+            font-size: 1.5rem;
+            color: var(--color-ember);
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+        }
+
+        /* ============================================
+           SECTION 28: RESPONSIVE DESIGN
+           ============================================ */
+        
+        @media (max-width: 1024px) {
+            .warrior-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .opening-title {
+                font-size: 5rem;
+            }
+            
+            .hero-name {
+                font-size: 4rem;
+            }
+            
+            .section-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .warrior-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .opening-title {
+                font-size: 3.5rem;
+                letter-spacing: 10px;
+            }
+            
+            .opening-subtitle {
+                font-size: 1rem;
+                letter-spacing: 8px;
+            }
+            
+            .hero-name {
+                font-size: 3rem;
+                letter-spacing: 8px;
+            }
+            
+            .hero-stats {
+                gap: 30px;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+                letter-spacing: 5px;
+            }
+            
+            .quote-text {
+                font-size: 1.4rem;
+            }
+            
+            .motivation-content {
+                padding: 40px 30px;
+            }
+            
+            .power-quote-text {
+                font-size: 1.8rem;
+            }
+            
+            .battlecry-text {
+                font-size: 2.5rem;
+                letter-spacing: 5px;
+            }
+            
+            .ending-title {
+                font-size: 3rem;
+                letter-spacing: 8px;
+            }
+            
+            .floating-nav {
+                display: none;
+            }
+            
+            .interactive-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .fire-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .opening-title {
+                font-size: 2.5rem;
+                letter-spacing: 5px;
+            }
+            
+            .hero-name {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .quote-card {
+                padding: 30px 20px;
+            }
+            
+            .quote-text {
+                font-size: 1.2rem;
+            }
+            
+            .motivation-paragraph {
+                font-size: 1.1rem;
+            }
+            
+            .ending-title {
+                font-size: 2rem;
+            }
+            
+            .battlecry-text {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* ============================================
+           SECTION 29: UTILITY CLASSES
+           ============================================ */
+        
+        .text-fire {
+            background: linear-gradient(90deg, var(--color-red), var(--color-orange), var(--color-yellow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .text-glow {
+            text-shadow: var(--text-shadow-fire);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mb-40 {
+            margin-bottom: 40px;
+        }
+
+        .mt-40 {
+            margin-top: 40px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============================================
+           SECTION 30: ADDITIONAL FIRE EFFECTS
+           ============================================ */
+        
+        .fire-border {
+            position: relative;
+            border: 2px solid transparent;
+            background: linear-gradient(var(--color-dark), var(--color-dark)) padding-box,
+                        linear-gradient(135deg, var(--color-red), var(--color-orange), var(--color-yellow)) border-box;
+        }
+
+        .glow-box {
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.3),
+                        0 0 40px rgba(255, 69, 0, 0.2),
+                        0 0 60px rgba(255, 69, 0, 0.1);
+        }
+
+        /* ============================================
+           SECTION 31: PULSING ELEMENTS
+           ============================================ */
+        
+        .pulse-slow {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .pulse-fast {
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ============================================
+           SECTION 32: PROGRESS INDICATORS
+           ============================================ */
+        
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-red), var(--color-orange), var(--color-yellow));
+            z-index: 10001;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px var(--color-orange);
+        }
+
+        /* ============================================
+           SECTION 33: AUDIO VISUALIZER PLACEHOLDER
+           ============================================ */
+        
+        .audio-visualizer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 5px;
+            height: 50px;
+            margin: 20px 0;
+        }
+
+        .audio-bar {
+            width: 8px;
+            background: linear-gradient(to top, var(--color-red), var(--color-orange), var(--color-yellow));
+            border-radius: 4px;
+            animation: audioWave 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes audioWave {
+            from { height: 10px; }
+            to { height: 50px; }
+        }
+
+        .audio-bar:nth-child(1) { animation-delay: 0s; }
+        .audio-bar:nth-child(2) { animation-delay: 0.1s; }
+        .audio-bar:nth-child(3) { animation-delay: 0.2s; }
+        .audio-bar:nth-child(4) { animation-delay: 0.3s; }
+        .audio-bar:nth-child(5) { animation-delay: 0.4s; }
+        .audio-bar:nth-child(6) { animation-delay: 0.3s; }
+        .audio-bar:nth-child(7) { animation-delay: 0.2s; }
+        .audio-bar:nth-child(8) { animation-delay: 0.1s; }
+        .audio-bar:nth-child(9) { animation-delay: 0s; }
+
+        /* ============================================
+           SECTION 34: COUNTDOWN TIMER STYLES
+           ============================================ */
+        
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--color-orange);
+            text-shadow: 0 0 20px var(--color-orange);
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ============================================
+           SECTION 35: FINAL STYLES & FIXES
+           ============================================ */
+        
+        .section-divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-red), var(--color-orange), var(--color-red), transparent);
+            margin: 0;
+        }
+
+        .glitch-container {
+            position: relative;
+        }
+
+        .glitch-text {
+            animation: glitchText 3s infinite;
+        }
+
+        /* Additional cursor effect */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-orange);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10002;
+            transition: transform 0.1s ease, opacity 0.3s ease;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor.clicking {
+            transform: scale(0.8);
+            background: var(--color-orange);
+        }
+
+        /* Fire trail effect */
+        .fire-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, var(--color-orange), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10001;
+            animation: fireTrailFade 0.5s ease forwards;
+        }
+
+        @keyframes fireTrailFade {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        /* Section specific backgrounds */
+        .bg-gradient-dark {
+            background: linear-gradient(180deg, #000 0%, #0a0000 100%);
+        }
+
+        .bg-gradient-fire {
+            background: linear-gradient(180deg, #1a0000 0%, #2a0000 50%, #1a0000 100%);
+        }
+
+        /* Text animations */
+        .text-shimmer {
+            background: linear-gradient(90deg, #fff, var(--color-orange), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientMove 3s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         LOADING SCREEN
+         ============================================ -->
+    <div id="loading-screen">
+        <div class="loading-fire-container">
+            <div class="loading-fire">
+                <div class="loading-flame main"></div>
+                <div class="loading-flame left"></div>
+                <div class="loading-flame right"></div>
+            </div>
+        </div>
+        <div class="loading-text">GALANG</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="loading-percentage" id="loading-percentage">0%</div>
+    </div>
+
+    <!-- ============================================
+         SCROLL PROGRESS BAR
+         ============================================ -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- ============================================
+         CANVAS ELEMENTS
+         ============================================ -->
+    <canvas id="fire-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+    <canvas id="mouse-fire-canvas"></canvas>
+    <canvas id="ash-canvas"></canvas>
+
+    <!-- ============================================
+         LIGHTNING OVERLAY
+         ============================================ -->
+    <div class="lightning-overlay" id="lightning-overlay"></div>
+
+    <!-- ============================================
+         RAGE MODE OVERLAY
+         ============================================ -->
+    <div class="rage-overlay" id="rage-overlay"></div>
+
+    <!-- ============================================
+         EMBER PARTICLES
+         ============================================ -->
+    <div class="ember-container" id="ember-container"></div>
+
+    <!-- ============================================
+         ASH PARTICLES
+         ============================================ -->
+    <div class="ash-container" id="ash-container"></div>
+
+    <!-- ============================================
+         SMOKE PARTICLES
+         ============================================ -->
+    <div class="smoke-container" id="smoke-container"></div>
+
+    <!-- ============================================
+         FLOATING NAVIGATION
+         ============================================ -->
+    <nav class="floating-nav" id="floating-nav">
+        <div class="nav-dot" data-section="opening-screen" data-label="Opening"></div>
+        <div class="nav-dot" data-section="hero-section" data-label="Hero"></div>
+        <div class="nav-dot" data-section="journey-section" data-label="Perjalanan"></div>
+        <div class="nav-dot" data-section="quotes-section" data-label="Motivasi"></div>
+        <div class="nav-dot" data-section="warrior-section" data-label="Pejuang"></div>
+        <div class="nav-dot" data-section="battlecry-section" data-label="Battle Cry"></div>
+        <div class="nav-dot" data-section="ending-screen" data-label="Ending"></div>
+    </nav>
+
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
+    <main class="main-content" id="main-content">
+        
+        <!-- ============================================
+             SECTION 1: OPENING DRAMATIC SCREEN
+             ============================================ -->
+        <section id="opening-screen">
+            <div class="opening-bg-effect"></div>
+            <div class="opening-title-container">
+                <p class="opening-subtitle">⚔️ Selamat Datang, Pejuang ⚔️</p>
+                <h1 class="opening-title">GALANG</h1>
+                <p class="opening-tagline">"Dimana <span>api</span> tidak pernah padam"</p>
+                <div class="opening-divider"></div>
+                <p class="opening-quote">
+                    🔥 Ini bukan sekadar website. Ini adalah perjalanan. Perjalanan seorang manusia bernama 
+                    <strong>GALANG</strong> yang menolak untuk menyerah, yang memilih untuk terus berdiri 
+                    meski dunia berusaha meruntuhkannya. 🔥
+                </p>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll untuk memulai</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 2: HERO SECTION
+             ============================================ -->
+        <section id="hero-section">
+            <div class="hero-bg-fire"></div>
+            <div class="hero-silhouette"></div>
+            <div class="hero-content">
+                <div class="hero-emoji">🔥⚔️🔥</div>
+                <p class="hero-name-prefix">The Unbreakable</p>
+                <h2 class="hero-name">GALANG</h2>
+                <p class="hero-title">🛡️ Sang Pejuang Tanpa Batas 🛡️</p>
+                <p class="hero-description">
+                    <strong>GALANG</strong> bukan nama biasa. Ini adalah simbol keteguhan. 
+                    Simbol dari seseorang yang telah melewati <strong>ribuan badai</strong>, 
+                    namun tetap berdiri tegak. Seseorang yang <strong>api semangatnya</strong> 
+                    tidak pernah bisa dipadamkan oleh apapun.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item reveal">
+                        <div class="stat-number" data-count="999">0</div>
+                        <div class="stat-label">Rintangan Dilewati</div>
+                    </div>
+                    <div class="stat-item reveal">
+                        <div class="stat-number" data-count="100">0</div>
+                        <div class="stat-label">Persen Semangat</div>
+                    </div>
+                    <div class="stat-item reveal">
+                        <div class="stat-number" data-count="1">0</div>
+                        <div class="stat-label">Tujuan: Menang</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 3: JOURNEY SECTION (PARALLAX)
+             ============================================ -->
+        <section id="journey-section">
+            <div class="journey-parallax-bg"></div>
+            <div class="journey-container">
+                <div class="journey-header">
+                    <span class="section-emoji">🚶‍♂️</span>
+                    <h2 class="section-title">Perjalanan Hidup</h2>
+                    <p class="section-subtitle">Setiap langkah adalah pertempuran</p>
+                </div>
+                
+                <div class="journey-timeline">
+                    <div class="journey-item">
+                        <span class="journey-phase">Fase 1: Kegelapan</span>
+                        <h3 class="journey-title">🌑 Lahir Dari Kegelapan</h3>
+                        <p class="journey-text">
+                            Setiap pejuang hebat lahir dari kegelapan. <strong>GALANG</strong>, kamu mungkin 
+                            pernah merasa sendirian, terpuruk, dan tidak ada yang mengerti. Tapi ketahuilah — 
+                            kegelapan itu adalah tungku yang menempa jiwamu menjadi baja.
+                        </p>
+                        <div class="journey-quote">
+                            "Dalam kegelapan terdalam, api terkecil pun akan terlihat seperti matahari."
+                        </div>
+                    </div>
+
+                    <div class="journey-item">
+                        <span class="journey-phase">Fase 2: Kebangkitan</span>
+                        <h3 class="journey-title">⚡ Percikan Pertama</h3>
+                        <p class="journey-text">
+                            Ada momen ketika kamu memutuskan untuk tidak lagi menjadi korban. Ketika 
+                            <strong>GALANG</strong> bangkit dari abu, dunia mulai gemetar. Percikan pertama 
+                            itu adalah keputusan — keputusan untuk melawan, untuk bertahan, untuk menang.
+                        </p>
+                        <div class="journey-quote">
+                            "Ketika kamu memutuskan untuk bangkit, alam semesta akan membuka jalan."
+                        </div>
+                    </div>
+
+                    <div class="journey-item">
+                        <span class="journey-phase">Fase 3: Pembakaran</span>
+                        <h3 class="journey-title">🔥 Api Membara</h3>
+                        <p class="journey-text">
+                            Sekarang apimu menyala. Bukan api kecil yang mudah ditiup angin, tapi 
+                            <strong>kobaran api</strong> yang membakar segala keraguan dan ketakutan. 
+                            <strong>GALANG</strong>, kamu adalah api itu sendiri — tidak terkendali, 
+                            tidak bisa dipadamkan, dan terus berkobar.
+                        </p>
+                        <div class="journey-quote">
+                            "Jadilah api yang begitu besar, sehingga dunia tidak bisa mengabaikanmu."
+                        </div>
+                    </div>
+
+                    <div class="journey-item">
+                        <span class="journey-phase">Fase 4: Pertempuran</span>
+                        <h3 class="journey-title">⚔️ Melawan Takdir</h3>
+                        <p class="journey-text">
+                            Takdir bukan sesuatu yang diberikan — takdir adalah sesuatu yang kamu 
+                            <strong>rebut</strong>. Setiap hari adalah pertempuran, dan <strong>GALANG</strong> 
+                            tidak pernah mundur. Kamu maju, menerjang, dan mengalahkan setiap rintangan 
+                            yang menghalangi jalanmu.
+                        </p>
+                        <div class="journey-quote">
+                            "Mereka yang menentang takdir adalah mereka yang menulis sejarah."
+                        </div>
+                    </div>
+
+                    <div class="journey-item">
+                        <span class="journey-phase">Fase 5: Transformasi</span>
+                        <h3 class="journey-title">🔄 Metamorfosis</h3>
+                        <p class="journey-text">
+                            Dari setiap luka, kamu menjadi lebih kuat. Dari setiap kegagalan, kamu 
+                            belajar. <strong>GALANG</strong> yang sekarang berbeda dari yang kemarin — 
+                            lebih tangguh, lebih bijak, lebih berapi-api. Transformasi ini tidak 
+                            pernah berhenti.
+                        </p>
+                        <div class="journey-quote">
+                            "Ulat yang merangkak hari ini akan menjadi kupu-kupu yang terbang besok."
+                        </div>
+                    </div>
+
+                    <div class="journey-item">
+                        <span class="journey-phase">Fase 6: Kemenangan</span>
+                        <h3 class="journey-title">👑 Kemenangan Abadi</h3>
+                        <p class="journey-text">
+                            Dan pada akhirnya, kemenangan bukan tentang mengalahkan orang lain — 
+                            tapi tentang <strong>mengalahkan dirimu yang lama</strong>. 
+                            <strong>GALANG</strong>, setiap hari kamu menang adalah hari dimana 
+                            kamu menjadi versi terbaik dari dirimu sendiri.
+                        </p>
+                        <div class="journey-quote">
+                            "Kemenangan sejati adalah ketika kamu bisa tersenyum di tengah badai."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 4: MOTIVATION QUOTES
+             ============================================ -->
+        <section id="quotes-section">
+            <div class="quotes-fire-bg"></div>
+            <div class="quotes-container">
+                <div class="quotes-header">
+                    <span class="section-emoji">💬</span>
+                    <h2 class="section-title">Kata-Kata Api</h2>
+                    <p class="section-subtitle">Untuk GALANG yang tak kenal menyerah</p>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-icon">🔥</div>
+                    <p class="quote-text">
+                        "<strong>GALANG</strong>, dunia tidak pernah ramah pada pejuang. 
+                        Tapi ingatlah — <span class="highlight">kamu bukan dilahirkan untuk hidup nyaman</span>. 
+                        Kamu dilahirkan untuk membuat perbedaan, untuk menjadi legenda."
+                    </p>
+                    <div class="quote-emoji-row">⚔️ 🛡️ 💪</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-icon">⚡</div>
+                    <p class="quote-text">
+                        "Api yang membakar hidupmu bukan untuk menghancurkanmu, 
+                        tapi <span class="highlight">untuk menempa dirimu</span>. 
+                        Seperti pedang yang harus dibakar untuk menjadi tajam, 
+                        begitu pula <strong>GALANG</strong> harus melewati api untuk menjadi kuat."
+                    </p>
+                    <div class="quote-emoji-row">🔥 ⚒️ 🗡️</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-icon">💀</div>
+                    <p class="quote-text">
+                        "Selama jantungmu masih berdetak, <span class="highlight">pertempuran belum selesai</span>. 
+                        Setiap detak adalah kesempatan. Setiap napas adalah kekuatan baru. 
+                        <strong>GALANG</strong>, kamu masih punya waktu untuk menang."
+                    </p>
+                    <div class="quote-emoji-row">❤️ ⏰ 🏆</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-icon">🌪️</div>
+                    <p class="quote-text">
+                        "Kamu bukan manusia biasa — <span class="highlight">kamu adalah badai yang berjalan</span>. 
+                        Mereka yang mencoba menghalangimu akan tersapu. 
+                        <strong>GALANG</strong>, jadilah badai yang tidak bisa dihentikan siapapun."
+                    </p>
+                    <div class="quote-emoji-row">🌩️ 💨 🔥</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-icon">🧱</div>
+                    <p class="quote-text">
+                        "Hidup ini keras, <span class="highlight">tapi kamu lebih keras</span>. 
+                        Setiap pukulan yang kamu terima hanya membuatmu lebih tangguh. 
+                        <strong>GALANG</strong>, kamu adalah tembok yang tidak bisa diruntuhkan."
+                    </p>
+                    <div class="quote-emoji-row">💪 🛡️ 🏔️</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-icon">🩸</div>
+                    <p class="quote-text">
+                        "Luka adalah bukti bahwa kamu telah bertarung. 
+                        <span class="highlight">Bekas luka adalah medali kehormatan</span>. 
+                        <strong>GALANG</strong>, jangan malu dengan lukamu — 
+                        itu adalah cerita keberanianmu."
+                    </p>
+                    <div class="quote-emoji-row">🎖️ ⭐ 👊</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 5: WARRIOR SECTION
+             ============================================ -->
+        <section id="warrior-section">
+            <div class="warrior-bg"></div>
+            <div class="warrior-container">
+                <div class="warrior-header">
+                    <span class="section-emoji">⚔️</span>
+                    <h2 class="section-title">Jiwa Pejuang</h2>
+                    <p class="section-subtitle">Nilai-nilai yang GALANG pegang teguh</p>
+                </div>
+
+                <div class="warrior-grid">
+                    <div class="warrior-item">
+                        <span class="warrior-icon">🔥</span>
+                        <h3 class="warrior-title">Semangat Membara</h3>
+                        <p class="warrior-text">
+                            Api dalam diri GALANG tidak pernah padam. Bahkan dalam kegelapan 
+                            terdalam, semangat itu terus menyala, menerangi jalan menuju kemenangan.
+                        </p>
+                    </div>
+
+                    <div class="warrior-item">
+                        <span class="warrior-icon">🛡️</span>
+                        <h3 class="warrior-title">Ketahanan Baja</h3>
+                        <p class="warrior-text">
+                            Seperti baja yang ditempa dalam api, GALANG menjadi lebih kuat 
+                            setiap kali menghadapi kesulitan. Tidak ada yang bisa menghancurkannya.
+                        </p>
+                    </div>
+
+                    <div class="warrior-item">
+                        <span class="warrior-icon">⚡</span>
+                        <h3 class="warrior-title">Kecepatan Kilat</h3>
+                        <p class="warrior-text">
+                            GALANG bergerak cepat, bertindak tegas. Tidak ada waktu untuk 
+                            ragu-ragu. Setiap detik adalah kesempatan untuk maju.
+                        </p>
+                    </div>
+
+                    <div class="warrior-item">
+                        <span class="warrior-icon">🧠</span>
+                        <h3 class="warrior-title">Pikiran Tajam</h3>
+                        <p class="warrior-text">
+                            Bukan hanya kekuatan fisik, tapi juga ketajaman berpikir. 
+                            GALANG selalu mencari cara, selalu menemukan solusi.
+                        </p>
+                    </div>
+
+                    <div class="warrior-item">
+                        <span class="warrior-icon">❤️</span>
+                        <h3 class="warrior-title">Hati Pemberani</h3>
+                        <p class="warrior-text">
+                            Keberanian sejati bukan tidak takut, tapi tetap maju meski takut. 
+                            GALANG memiliki hati singa yang tidak gentar.
+                        </p>
+                    </div>
+
+                    <div class="warrior-item">
+                        <span class="warrior-icon">🌟</span>
+                        <h3 class="warrior-title">Visi Bintang</h3>
+                        <p class="warrior-text">
+                            GALANG melihat jauh ke depan. Mimpinya setinggi bintang, 
+                            dan dia tidak akan berhenti sampai mencapainya.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 6: LONG MOTIVATION
+             ============================================ -->
+        <section id="motivation-section">
+            <div class="motivation-glow"></div>
+            <div class="motivation-container">
+                <div class="motivation-header">
+                    <span class="section-emoji">📜</span>
+                    <h2 class="section-title">Surat Untuk GALANG</h2>
+                    <p class="section-subtitle">Pesan dari api yang tidak pernah padam</p>
+                </div>
+
+                <div class="motivation-content">
+                    <p class="motivation-paragraph">
+                        <span class="name">GALANG</span>, aku tahu perjalananmu tidak mudah. 
+                        Aku tahu ada hari-hari dimana kamu merasa ingin menyerah, dimana beban 
+                        terasa terlalu berat untuk dipikul, dimana dunia seolah berkonspirasi 
+                        untuk menjatuhkanmu.
+                    </p>
+
+                    <p class="motivation-paragraph">
+                        Tapi dengarkan aku baik-baik: <strong>Kamu tidak diciptakan untuk hancur</strong>. 
+                        Kamu diciptakan untuk <strong>bangkit</strong>. Setiap air mata yang jatuh, 
+                        setiap luka yang menganga, setiap malam tanpa tidur — semuanya adalah bagian 
+                        dari proses yang akan membentukmu menjadi seseorang yang luar biasa.
+                    </p>
+
+                    <div class="motivation-emphasis">
+                        🔥 "GALANG, kamu lebih kuat dari yang kamu pikirkan" 🔥
+                    </div>
+
+                    <p class="motivation-paragraph">
+                        Lihat ke belakang sejenak. Lihat semua badai yang telah kamu lewati. 
+                        Lihat semua malam gelap yang akhirnya berganti pagi. Lihat semua 
+                        <strong>kemustahilan</strong> yang berhasil kamu kalahkan. Bukankah itu 
+                        bukti bahwa kamu adalah pejuang sejati?
+                    </p>
+
+                    <ul class="motivation-list">
+                        <li><span>🔥</span> Ketika orang lain menyerah, kamu terus berjalan</li>
+                        <li><span>⚔️</span> Ketika dunia berkata "tidak mungkin", kamu membuktikan "aku bisa"</li>
+                        <li><span>🛡️</span> Ketika rintangan menghadang, kamu menerjangnya</li>
+                        <li><span>⚡</span> Ketika keraguan muncul, kamu menggantinya dengan keyakinan</li>
+                        <li><span>💪</span> Ketika tubuh lelah, jiwamu tetap berkobar</li>
+                    </ul>
+
+                    <p class="motivation-paragraph">
+                        <span class="name">GALANG</span>, biarkan aku memberitahumu sebuah rahasia: 
+                        <strong>Tidak ada yang namanya kegagalan permanen</strong>. Setiap jatuh 
+                        adalah pelajaran. Setiap kesalahan adalah guru. Dan setiap kali kamu 
+                        bangkit dari kejatuhanmu, kamu menjadi lebih tinggi dari sebelumnya.
+                    </p>
+
+                    <div class="power-quote">
+                        <p class="power-quote-text">
+                            "Dunia akan mengujimu, tapi ingat — ujian terberat diberikan 
+                            kepada tentara terkuat"
+                        </p>
+                    </div>
+
+                    <p class="motivation-paragraph">
+                        Jangan pernah biarkan siapapun mematikan apimu. Tidak orang yang meragukan, 
+                        tidak keadaan yang sulit, tidak masa lalu yang menyakitkan. 
+                        <strong>Apimu adalah milikmu</strong>, dan hanya kamu yang berhak 
+                        mengendalikannya.
+                    </p>
+
+                    <p class="motivation-paragraph">
+                        Mulai hari ini, <span class="name">GALANG</span>, aku ingin kamu berjanji 
+                        pada dirimu sendiri:
+                    </p>
+
+                    <ul class="motivation-list">
+                        <li><span>✊</span> Aku tidak akan menyerah pada mimpi-mimpiku</li>
+                        <li><span>🔥</span> Aku akan terus berjuang meski sendirian</li>
+                        <li><span>⚔️</span> Aku akan menghadapi ketakutanku dengan keberanian</li>
+                        <li><span>🛡️</span> Aku akan melindungi jiwaku dari negativitas</li>
+                        <li><span>👑</span> Aku akan menjadi versi terbaik dari diriku</li>
+                    </ul>
+
+                    <div class="motivation-emphasis">
+                        💀 "Mati dalam pertempuran lebih mulia daripada hidup dalam penyesalan" 💀
+                    </div>
+
+                    <p class="motivation-paragraph">
+                        Dan ketika suatu hari nanti kamu berdiri di puncak, ketika semua 
+                        pengorbananmu berbuah manis, ketika dunia yang dulu meragukanmu 
+                        akhirnya mengakuimu — saat itulah kamu akan mengerti bahwa 
+                        <strong>setiap tetes keringat, setiap tetes darah, setiap tetes 
+                        air mata — semuanya worth it</strong>.
+                    </p>
+
+                    <p class="motivation-paragraph" style="text-align: center; font-size: 1.5rem;">
+                        <strong>🔥 <span class="name">GALANG</span>, KAMU ADALAH API. 
+                        DAN API TIDAK PERNAH PADAM. 🔥</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 7: MONOLOG SECTION
+             ============================================ -->
+        <section id="monolog-section">
+            <div class="monolog-bg"></div>
+            <div class="monolog-container">
+                <div class="monolog-header">
+                    <span class="section-emoji">🎭</span>
+                    <h2 class="section-title">Monolog Pejuang</h2>
+                    <p class="section-subtitle">Suara dari dalam jiwa GALANG</p>
+                </div>
+
+                <div class="monolog-content">
+                    <p class="monolog-text">
+                        "Aku pernah jatuh... berkali-kali."
+                    </p>
+                    <p class="monolog-text">
+                        "Aku pernah menangis di kegelapan, sendirian, tanpa siapapun yang tahu."
+                    </p>
+                    <p class="monolog-text">
+                        "Aku pernah bertanya... apakah semua ini worth it?"
+                    </p>
+                    <p class="monolog-text">
+                        "Tapi setiap pagi, aku memilih untuk bangkit lagi."
+                    </p>
+                    <p class="monolog-text highlight-text">
+                        "Karena aku tahu... aku lebih dari rasa sakitku."
+                    </p>
+                    <p class="monolog-text">
+                        "Aku adalah GALANG."
+                    </p>
+                    <p class="monolog-text">
+                        "Dan aku tidak akan berhenti sampai dunia mengingat namaku."
+                    </p>
+
+                    <div class="typing-container">
+                        <span class="typing-text" id="typing-text"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 8: MANIFESTO SECTION
+             ============================================ -->
+        <section id="manifesto-section">
+            <div class="manifesto-container">
+                <div class="manifesto-header">
+                    <span class="section-emoji">📋</span>
+                    <h2 class="section-title">Manifesto GALANG</h2>
+                    <p class="section-subtitle">Prinsip hidup yang tidak bisa diganggu gugat</p>
+                </div>
+
+                <div class="manifesto-content">
+                    <div class="manifesto-item">
+                        <span class="manifesto-number">01</span>
+                        <p class="manifesto-text">
+                            <strong>Aku tidak akan menyerah</strong> — tidak peduli seberapa 
+                            berat bebannya, seberapa jauh jalannya, atau seberapa keras 
+                            tantangannya. Menyerah bukan pilihan.
+                        </p>
+                    </div>
+
+                    <div class="manifesto-item">
+                        <span class="manifesto-number">02</span>
+                        <p class="manifesto-text">
+                            <strong>Aku akan menghadapi ketakutanku</strong> — karena di balik 
+                            setiap ketakutan ada kekuatan yang menunggu untuk dibebaskan. 
+                            Ketakutan adalah tangga menuju keberanian.
+                        </p>
+                    </div>
+
+                    <div class="manifesto-item">
+                        <span class="manifesto-number">03</span>
+                        <p class="manifesto-text">
+                            <strong>Aku akan terus belajar</strong> — dari kegagalan, dari 
+                            kesuksesan, dari orang lain, dari kehidupan. Setiap hari adalah 
+                            kesempatan untuk menjadi lebih baik.
+                        </p>
+                    </div>
+
+                    <div class="manifesto-item">
+                        <span class="manifesto-number">04</span>
+                        <p class="manifesto-text">
+                            <strong>Aku akan membantu sesama</strong> — karena api yang 
+                            menerangi jalan orang lain tidak akan membuatku lebih gelap. 
+                            Justru semakin terang.
+                        </p>
+                    </div>
+
+                    <div class="manifesto-item">
+                        <span class="manifesto-number">05</span>
+                        <p class="manifesto-text">
+                            <strong>Aku akan menjaga apiku tetap menyala</strong> — dengan 
+                            mimpi, dengan harapan, dengan tekad yang tidak bisa dipatahkan. 
+                            Api ini adalah identitasku.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 9: DARK EXTREME MODE
+             ============================================ -->
+        <section id="dark-mode-section">
+            <div class="dark-mode-container">
+                <div class="dark-mode-header">
+                    <span class="section-emoji">🌑</span>
+                    <h2 class="section-title">Sisi Gelap</h2>
+                    <p class="section-subtitle">Kegelapan yang membentuk GALANG</p>
+                </div>
+
+                <div class="dark-mode-content">
+                    <div class="dark-card">
+                        <div class="dark-card-icon">💀</div>
+                        <h3 class="dark-card-title">Rasa Sakit</h3>
+                        <p class="dark-card-text">
+                            Rasa sakit adalah guru terbaik. Ia mengajarkan apa yang tidak 
+                            bisa diajarkan oleh kenyamanan. GALANG memeluk rasa sakitnya 
+                            dan mengubahnya menjadi kekuatan.
+                        </p>
+                    </div>
+
+                    <div class="dark-card">
+                        <div class="dark-card-icon">🌑</div>
+                        <h3 class="dark-card-title">Kesendirian</h3>
+                        <p class="dark-card-text">
+                            Dalam kesendirian, GALANG menemukan dirinya yang sejati. 
+                            Jauh dari kebisingan dunia, ia mendengar suara jiwanya sendiri 
+                            yang berbisik: "Terus berjuang."
+                        </p>
+                    </div>
+
+                    <div class="dark-card">
+                        <div class="dark-card-icon">⛓️</div>
+                        <h3 class="dark-card-title">Keterbatasan</h3>
+                        <p class="dark-card-text">
+                            Keterbatasan bukan akhir — ia adalah tantangan untuk dilampaui. 
+                            GALANG tidak melihat dinding, ia melihat tangga untuk didaki.
+                        </p>
+                    </div>
+
+                    <div class="dark-card">
+                        <div class="dark-card-icon">🩸</div>
+                        <h3 class="dark-card-title">Pengorbanan</h3>
+                        <p class="dark-card-text">
+                            Tidak ada kemenangan tanpa pengorbanan. GALANG rela memberikan 
+                            kenyamanannya hari ini demi kejayaan di masa depan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 10: INTERACTIVE SECTION
+             ============================================ -->
+        <section id="interactive-section">
+            <div class="interactive-container">
+                <div class="interactive-header">
+                    <span class="section-emoji">🎮</span>
+                    <h2 class="section-title">Arena Interaktif</h2>
+                    <p class="section-subtitle">Rasakan kekuatan GALANG</p>
+                </div>
+
+                <div class="interactive-buttons">
+                    <button class="fire-button rage-btn" id="rage-mode-btn">
+                        🔥 AKTIFKAN RAGE MODE 🔥
+                    </button>
+                    <button class="fire-button bangkit-btn" id="bangkit-btn">
+                        ⚡ BANGKIT LAGI ⚡
+                    </button>
+                    <button class="fire-button" id="shake-btn">
+                        💀 GUNCANG DUNIA 💀
+                    </button>
+                    <button class="fire-button" id="lightning-btn">
+                        ⚡ PANGGIL PETIR ⚡
+                    </button>
+                </div>
+
+                <div class="audio-visualizer" id="audio-visualizer">
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                </div>
+
+                <div class="heartbeat-container">
+                    <div class="heartbeat-display">
+                        <span class="heart-icon">❤️</span>
+                        <div>
+                            <span class="heart-counter" id="heart-counter">0</span>
+                            <p class="heart-label">Detak Jantung Pejuang</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secret-container">
+                    <button class="secret-button" id="secret-btn">
+                        🔒 Klik 10x untuk pesan rahasia
+                    </button>
+                    <div class="secret-message" id="secret-message">
+                        <h3>🔥 PESAN RAHASIA UNTUK GALANG 🔥</h3>
+                        <p>
+                            Kamu telah membuktikan ketekunanmu. Ini adalah bukti bahwa kamu 
+                            tidak mudah menyerah. Ingatlah: <strong>Orang yang berhasil adalah 
+                            mereka yang tidak berhenti mencoba</strong>. Kamu adalah salah satunya.
+                            <br><br>
+                            🔥 <strong>THE FIRE INSIDE YOU IS ETERNAL</strong> 🔥
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 11: BATTLE CRY SECTION
+             ============================================ -->
+        <section id="battlecry-section">
+            <div class="battlecry-bg"></div>
+            <div class="battlecry-content">
+                <div class="battlecry-emoji">
+                    <span>⚔️</span>
+                    <span>🔥</span>
+                    <span>⚔️</span>
+                </div>
+                <h2 class="battlecry-text">
+                    GALANG<br>
+                    TIDAK AKAN<br>
+                    PERNAH MENYERAH!
+                </h2>
+                <p class="battlecry-sub">🛡️ Ini adalah janji abadi 🛡️</p>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 12: FINAL MOTIVATION
+             ============================================ -->
+        <section id="final-motivation-section">
+            <div class="final-glow"></div>
+            <div class="final-container">
+                <div class="final-header">
+                    <span class="section-emoji">🏁</span>
+                    <h2 class="section-title">Pesan Terakhir</h2>
+                    <p class="section-subtitle">Sebelum kamu melanjutkan perjalanan</p>
+                </div>
+
+                <div class="final-message">
+                    <div class="final-emoji-row">🔥⚔️👑⚔️🔥</div>
+                    <p class="final-text">
+                        <span class="name">GALANG</span>, perjalanan ini mungkin panjang dan melelahkan. 
+                        Tapi ingatlah — <strong>setiap langkah yang kamu ambil membawamu lebih dekat 
+                        ke tujuanmu</strong>.
+                    </p>
+                    <p class="final-text">
+                        Jangan pernah meragukan dirimu. Jangan pernah memadamkan apimu. 
+                        Dan jangan pernah lupa bahwa <strong>kamu adalah pejuang yang luar biasa</strong>.
+                    </p>
+                    <p class="final-text">
+                        Sekarang pergilah, <span class="name">GALANG</span>. 
+                        <strong>Taklukkan duniamu. Tulis sejarahmu. Nyalakan apimu.</strong>
+                    </p>
+                    <p class="final-signature">
+                        — Dari api yang tidak pernah padam 🔥
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 13: ENDING SCREEN
+             ============================================ -->
+        <section id="ending-screen">
+            <div class="ending-fire-bg"></div>
+            <div class="ending-content">
+                <div class="ending-emoji">🔥</div>
+                <h1 class="ending-title">THE FIRE</h1>
+                <h2 class="ending-subtitle">NEVER DIES</h2>
+                <div class="ending-line"></div>
+                <p class="ending-quote">
+                    "<strong>GALANG</strong>, selama kamu masih bernapas, 
+                    selama jantungmu masih berdetak — 
+                    <strong>api dalam dirimu tidak akan pernah padam</strong>."
+                </p>
+                <p class="ending-year">🔥 2024 - ∞ 🔥</p>
+                <button class="restart-button" id="restart-btn">
+                    🔄 Mulai Perjalanan Lagi
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================
+         JAVASCRIPT SECTION
+         ============================================ -->
+    <script>
+        // ============================================
+        // SECTION 1: GLOBAL VARIABLES & CONSTANTS
+        // ============================================
+        
+        const CONFIG = {
+            LOADING_DURATION: 3000,
+            PARTICLE_COUNT: 50,
+            EMBER_COUNT: 30,
+            ASH_COUNT: 40,
+            SMOKE_COUNT: 10,
+            TYPING_SPEED: 80,
+            HEARTBEAT_INTERVAL: 1000,
+            SECRET_CLICKS_REQUIRED: 10,
+            FIRE_PARTICLE_COUNT: 100,
+            MOUSE_TRAIL_LENGTH: 20
+        };
+
+        const TYPING_MESSAGES = [
+            "AKU ADALAH GALANG...",
+            "AKU TIDAK AKAN MENYERAH...",
+            "API INI TIDAK AKAN PADAM...",
+            "AKU ADALAH PEJUANG...",
+            "DUNIA AKAN MENGINGAT NAMAKU..."
+        ];
+
+        let currentTypingIndex = 0;
+        let secretClickCount = 0;
+        let heartbeatCount = 0;
+        let isRageMode = false;
+        let mouseTrail = [];
+        let lastMousePos = { x: 0, y: 0 };
+
+        // ============================================
+        // SECTION 2: DOM ELEMENTS
+        // ============================================
+        
+        const elements = {
+            loadingScreen: document.getElementById('loading-screen'),
+            progressBar: document.getElementById('progress-bar'),
+            loadingPercentage: document.getElementById('loading-percentage'),
+            scrollProgress: document.getElementById('scroll-progress'),
+            fireCanvas: document.getElementById('fire-canvas'),
+            particleCanvas: document.getElementById('particle-canvas'),
+            mouseFireCanvas: document.getElementById('mouse-fire-canvas'),
+            ashCanvas: document.getElementById('ash-canvas'),
+            lightningOverlay: document.getElementById('lightning-overlay'),
+            rageOverlay: document.getElementById('rage-overlay'),
+            emberContainer: document.getElementById('ember-container'),
+            ashContainer: document.getElementById('ash-container'),
+            smokeContainer: document.getElementById('smoke-container'),
+            mainContent: document.getElementById('main-content'),
+            typingText: document.getElementById('typing-text'),
+            heartCounter: document.getElementById('heart-counter'),
+            secretBtn: document.getElementById('secret-btn'),
+            secretMessage: document.getElementById('secret-message'),
+            rageModeBtn: document.getElementById('rage-mode-btn'),
+            bangkitBtn: document.getElementById('bangkit-btn'),
+            shakeBtn: document.getElementById('shake-btn'),
+            lightningBtn: document.getElementById('lightning-btn'),
+            restartBtn: document.getElementById('restart-btn'),
+            floatingNav: document.getElementById('floating-nav')
+        };
+
+        // ============================================
+        // SECTION 3: UTILITY FUNCTIONS
+        // ============================================
+        
+        function randomRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function lerp(start, end, factor) {
+            return start + (end - start) * factor;
+        }
+
+        function clamp(value, min, max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function throttle(func, limit) {
+            let inThrottle;
+            return function(...args) {
+                if (!inThrottle) {
+                    func.apply(this, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        }
+
+        // ============================================
+        // SECTION 4: LOADING SCREEN
+        // ============================================
+        
+        function initLoadingScreen() {
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += randomRange(1, 5);
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadingInterval);
+                    setTimeout(hideLoadingScreen, 500);
+                }
+                elements.progressBar.style.width = progress + '%';
+                elements.loadingPercentage.textContent = Math.floor(progress) + '%';
+            }, 50);
+        }
+
+        function hideLoadingScreen() {
+            elements.loadingScreen.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            initAllAnimations();
+        }
+
+        // ============================================
+        // SECTION 5: CANVAS - FIRE ANIMATION
+        // ============================================
+        
+        class FireParticle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.reset();
+            }
+
+            reset() {
+                this.x = randomRange(0, this.canvas.width);
+                this.y = this.canvas.height + randomRange(0, 50);
+                this.size = randomRange(2, 8);
+                this.speedY = randomRange(1, 4);
+                this.speedX = randomRange(-1, 1);
+                this.life = randomRange(50, 150);
+                this.maxLife = this.life;
+                this.hue = randomRange(10, 50);
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX + Math.sin(this.y * 0.05) * 0.5;
+                this.life--;
+                this.size *= 0.99;
+
+                if (this.life <= 0 || this.y < -50 || this.size < 0.5) {
+                    this.reset();
+                }
+            }
+
+            draw(ctx) {
+                const alpha = this.life / this.maxLife;
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 1)`);
+                gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 50%, 0.8)`);
+                gradient.addColorStop(1, `hsla(${this.hue}, 100%, 30%, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class FireAnimation {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.resize();
+                this.init();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                for (let i = 0; i < CONFIG.FIRE_PARTICLE_COUNT; i++) {
+                    this.particles.push(new FireParticle(this.canvas));
+                }
+            }
+
+            update() {
+                this.particles.forEach(particle => particle.update());
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw glow at bottom
+                const glowGradient = this.ctx.createLinearGradient(
+                    0, this.canvas.height,
+                    0, this.canvas.height - 300
+                );
+                glowGradient.addColorStop(0, 'rgba(255, 69, 0, 0.3)');
+                glowGradient.addColorStop(0.5, 'rgba(255, 69, 0, 0.1)');
+                glowGradient.addColorStop(1, 'rgba(255, 69, 0, 0)');
+                this.ctx.fillStyle = glowGradient;
+                this.ctx.fillRect(0, this.canvas.height - 300, this.canvas.width, 300);
+
+                this.particles.forEach(particle => particle.draw(this.ctx));
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ============================================
+        // SECTION 6: CANVAS - EMBER PARTICLES
+        // ============================================
+        
+        class EmberParticle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.reset();
+            }
+
+            reset() {
+                this.x = randomRange(0, this.canvas.width);
+                this.y = this.canvas.height + 20;
+                this.size = randomRange(1, 4);
+                this.speedY = randomRange(0.5, 2);
+                this.speedX = randomRange(-0.5, 0.5);
+                this.rotation = 0;
+                this.rotationSpeed = randomRange(-0.05, 0.05);
+                this.life = 1;
+                this.decay = randomRange(0.002, 0.008);
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX + Math.sin(this.y * 0.02) * 0.3;
+                this.rotation += this.rotationSpeed;
+                this.life -= this.decay;
+
+                if (this.life <= 0 || this.y < -50) {
+                    this.reset();
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+                gradient.addColorStop(0, '#FFD700');
+                gradient.addColorStop(0.5, '#FF8C00');
+                gradient.addColorStop(1, '#FF4500');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Glow effect
+                ctx.shadowColor = '#FF4500';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        class EmberAnimation {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.resize();
+                this.init();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                for (let i = 0; i < CONFIG.EMBER_COUNT; i++) {
+                    const particle = new EmberParticle(this.canvas);
+                    particle.y = randomRange(0, this.canvas.height);
+                    this.particles.push(particle);
+                }
+            }
+
+            update() {
+                this.particles.forEach(particle => particle.update());
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(particle => particle.draw(this.ctx));
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ============================================
+        // SECTION 7: CANVAS - MOUSE FIRE EFFECT
+        // ============================================
+        
+        class MouseFireParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = randomRange(3, 8);
+                this.speedX = randomRange(-2, 2);
+                this.speedY = randomRange(-3, -1);
+                this.life = 1;
+                this.decay = randomRange(0.02, 0.05);
+                this.hue = randomRange(10, 50);
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedY += 0.05; // Gravity
+                this.life -= this.decay;
+                this.size *= 0.97;
+            }
+
+            draw(ctx) {
+                if (this.life <= 0) return;
+                
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 1)`);
+                gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 50%, 0.5)`);
+                gradient.addColorStop(1, `hsla(${this.hue}, 100%, 30%, 0)`);
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        class MouseFireAnimation {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.isActive = false;
+                this.resize();
+                this.bindEvents();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            bindEvents() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    this.isActive = true;
+                    
+                    // Create particles on mouse move
+                    for (let i = 0; i < 3; i++) {
+                        this.particles.push(new MouseFireParticle(
+                            this.mouseX + randomRange(-5, 5),
+                            this.mouseY + randomRange(-5, 5)
+                        ));
+                    }
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    this.isActive = false;
+                });
+            }
+
+            update() {
+                this.particles = this.particles.filter(p => !p.isDead());
+                this.particles.forEach(p => p.update());
+                
+                // Limit particles
+                if (this.particles.length > 200) {
+                    this.particles.splice(0, 50);
+                }
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(p => p.draw(this.ctx));
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ============================================
+        // SECTION 8: CANVAS - ASH PARTICLES
+        // ============================================
+        
+        class AshParticle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.reset();
+            }
+
+            reset() {
+                this.x = randomRange(0, this.canvas.width);
+                this.y = -20;
+                this.size = randomRange(1, 3);
+                this.speedY = randomRange(0.3, 1);
+                this.speedX = randomRange(-0.5, 0.5);
+                this.rotation = randomRange(0, Math.PI * 2);
+                this.rotationSpeed = randomRange(-0.02, 0.02);
+                this.opacity = randomRange(0.3, 0.7);
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.y * 0.01) * 0.2;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > this.canvas.height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.fillStyle = '#555';
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        class AshAnimation {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.resize();
+                this.init();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                for (let i = 0; i < CONFIG.ASH_COUNT; i++) {
+                    const particle = new AshParticle(this.canvas);
+                    particle.y = randomRange(0, this.canvas.height);
+                    this.particles.push(particle);
+                }
+            }
+
+            update() {
+                this.particles.forEach(particle => particle.update());
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(particle => particle.draw(this.ctx));
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ============================================
+        // SECTION 9: HTML EMBER PARTICLES
+        // ============================================
+        
+        function createHTMLEmbers() {
+            for (let i = 0; i < 20; i++) {
+                const ember = document.createElement('div');
+                ember.className = 'ember';
+                ember.style.left = randomRange(0, 100) + '%';
+                ember.style.animationDuration = randomRange(6, 12) + 's';
+                ember.style.animationDelay = randomRange(0, 5) + 's';
+                elements.emberContainer.appendChild(ember);
+            }
+        }
+
+        // ============================================
+        // SECTION 10: HTML ASH PARTICLES
+        // ============================================
+        
+        function createHTMLAsh() {
+            for (let i = 0; i < 30; i++) {
+                const ash = document.createElement('div');
+                ash.className = 'ash';
+                ash.style.left = randomRange(0, 100) + '%';
+                ash.style.animationDuration = randomRange(8, 15) + 's';
+                ash.style.animationDelay = randomRange(0, 10) + 's';
+                elements.ashContainer.appendChild(ash);
+            }
+        }
+
+        // ============================================
+        // SECTION 11: SMOKE PARTICLES
+        // ============================================
+        
+        function createSmokeParticles() {
+            for (let i = 0; i < CONFIG.SMOKE_COUNT; i++) {
+                const smoke = document.createElement('div');
+                smoke.className = 'smoke-particle';
+                smoke.style.left = randomRange(0, 100) + '%';
+                smoke.style.animationDuration = randomRange(4, 8) + 's';
+                smoke.style.animationDelay = randomRange(0, 5) + 's';
+                smoke.style.width = randomRange(50, 150) + 'px';
+                smoke.style.height = randomRange(50, 150) + 'px';
+                elements.smokeContainer.appendChild(smoke);
+            }
+        }
+
+        // ============================================
+        // SECTION 12: SCROLL EFFECTS
+        // ============================================
+        
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            elements.scrollProgress.style.width = scrollPercent + '%';
+        }
+
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .journey-item, .quote-card, .dark-card, .warrior-item, .manifesto-item, .motivation-paragraph, .monolog-text');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // ============================================
+        // SECTION 13: PARALLAX EFFECT
+        // ============================================
+        
+        function handleParallax() {
+            const scrolled = window.scrollY;
+            const parallaxElements = document.querySelectorAll('.journey-parallax-bg');
+            
+            parallaxElements.forEach(element => {
+                const speed = 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        }
+
+        // ============================================
+        // SECTION 14: NAVIGATION
+        // ============================================
+        
+        function initNavigation() {
+            const navDots = document.querySelectorAll('.nav-dot');
+            
+            navDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const targetId = dot.getAttribute('data-section');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                                              targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Update active nav dot on scroll
+            window.addEventListener('scroll', throttle(updateActiveNavDot, 100));
+        }
+
+        function updateActiveNavDot() {
+            const sections = document.querySelectorAll('section');
+            const navDots = document.querySelectorAll('.nav-dot');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop - sectionHeight / 3) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navDots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('data-section') === currentSection) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        // ============================================
+        // SECTION 15: TYPING ANIMATION
+        // ============================================
+        
+        function initTypingAnimation() {
+            typeMessage(TYPING_MESSAGES[currentTypingIndex]);
+        }
+
+        function typeMessage(message) {
+            let charIndex = 0;
+            elements.typingText.textContent = '';
+            
+            const typeInterval = setInterval(() => {
+                if (charIndex < message.length) {
+                    elements.typingText.textContent += message.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(typeInterval);
+                    setTimeout(() => {
+                        deleteMessage(message);
+                    }, 2000);
+                }
+            }, CONFIG.TYPING_SPEED);
+        }
+
+        function deleteMessage(message) {
+            let charIndex = message.length;
+            
+            const deleteInterval = setInterval(() => {
+                if (charIndex > 0) {
+                    elements.typingText.textContent = message.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    clearInterval(deleteInterval);
+                    currentTypingIndex = (currentTypingIndex + 1) % TYPING_MESSAGES.length;
+                    setTimeout(() => {
+                        typeMessage(TYPING_MESSAGES[currentTypingIndex]);
+                    }, 500);
+                }
+            }, CONFIG.TYPING_SPEED / 2);
+        }
+
+        // ============================================
+        // SECTION 16: HEARTBEAT COUNTER
+        // ============================================
+        
+        function initHeartbeatCounter() {
+            setInterval(() => {
+                heartbeatCount++;
+                elements.heartCounter.textContent = heartbeatCount;
+                
+                // Add pulse effect
+                elements.heartCounter.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    elements.heartCounter.style.transform = 'scale(1)';
+                }, 100);
+            }, CONFIG.HEARTBEAT_INTERVAL);
+        }
+
+        // ============================================
+        // SECTION 17: COUNTER ANIMATION
+        // ============================================
+        
+        function initCounterAnimation() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px'
+            };
+
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            counters.forEach(counter => {
+                counterObserver.observe(counter);
+            });
+        }
+
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-count'));
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    element.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target;
+                }
+            };
+
+            updateCounter();
+        }
+
+        // ============================================
+        // SECTION 18: RAGE MODE
+        // ============================================
+        
+        function initRageMode() {
+            elements.rageModeBtn.addEventListener('click', toggleRageMode);
+        }
+
+        function toggleRageMode() {
+            isRageMode = !isRageMode;
+            
+            if (isRageMode) {
+                elements.rageOverlay.classList.add('active');
+                document.body.classList.add('rage-mode');
+                elements.rageModeBtn.textContent = '🔥 NONAKTIFKAN RAGE MODE 🔥';
+                
+                // Intensify effects
+                playRageSound();
+                triggerScreenShake();
+                triggerLightningFlash();
+                
+                // Auto disable after 10 seconds
+                setTimeout(() => {
+                    if (isRageMode) {
+                        toggleRageMode();
+                    }
+                }, 10000);
+            } else {
+                elements.rageOverlay.classList.remove('active');
+                document.body.classList.remove('rage-mode');
+                elements.rageModeBtn.textContent = '🔥 AKTIFKAN RAGE MODE 🔥';
+            }
+        }
+
+        function playRageSound() {
+            // Create audio context for rage mode sound
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
+                
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // ============================================
+        // SECTION 19: SCREEN SHAKE
+        // ============================================
+        
+        function initScreenShake() {
+            elements.shakeBtn.addEventListener('click', triggerScreenShake);
+        }
+
+        function triggerScreenShake() {
+            document.body.classList.add('shake');
+            
+            // Play shake sound
+            playShakeSound();
+            
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+            }, 500);
+        }
+
+        function playShakeSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sawtooth';
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.frequency.setValueAtTime(80, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // ============================================
+        // SECTION 20: LIGHTNING FLASH
+        // ============================================
+        
+        function initLightningFlash() {
+            elements.lightningBtn.addEventListener('click', triggerLightningFlash);
+        }
+
+        function triggerLightningFlash() {
+            elements.lightningOverlay.classList.add('flash');
+            
+            // Play thunder sound
+            playThunderSound();
+            
+            setTimeout(() => {
+                elements.lightningOverlay.classList.remove('flash');
+            }, 300);
+        }
+
+        function playThunderSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create noise for thunder
+                const bufferSize = audioCtx.sampleRate * 0.5;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+                }
+                
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(500, audioCtx.currentTime);
+                
+                noise.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                noise.start();
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // ============================================
+        // SECTION 21: BANGKIT BUTTON
+        // ============================================
+        
+        function initBangkitButton() {
+            elements.bangkitBtn.addEventListener('click', triggerBangkitEffect);
+        }
+
+        function triggerBangkitEffect() {
+            // Flash effect
+            document.body.style.transition = 'filter 0.3s ease';
+            document.body.style.filter = 'brightness(2)';
+            
+            // Play rising sound
+            playBangkitSound();
+            
+            // Show motivational alert
+            setTimeout(() => {
+                document.body.style.filter = 'brightness(1)';
+                showBangkitMessage();
+            }, 300);
+            
+            // Create burst of embers
+            createEmberBurst();
+        }
+
+        function playBangkitSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.5);
+                
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        function showBangkitMessage() {
+            const messages = [
+                "🔥 GALANG TELAH BANGKIT! 🔥",
+                "⚔️ TIDAK ADA YANG BISA MENGHENTIKANMU! ⚔️",
+                "💪 KAMU LEBIH KUAT DARI KEMARIN! 💪",
+                "🔥 API DALAM DIRIMU BERKOBAR! 🔥",
+                "⚡ SAATNYA MENAKLUKKAN DUNIA! ⚡"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Create custom notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(255, 69, 0, 0.95));
+                color: white;
+                padding: 40px 60px;
+                border-radius: 20px;
+                font-family: Impact, sans-serif;
+                font-size: 1.8rem;
+                text-align: center;
+                z-index: 10000;
+                box-shadow: 0 0 50px rgba(255, 69, 0, 0.8);
+                border: 3px solid #FFD700;
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = randomMessage;
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 10);
+            
+            // Remove after delay
+            setTimeout(() => {
+                notification.style.transform = 'translate(-50%, -50%) scale(0)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 2000);
+        }
+
+        function createEmberBurst() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const ember = document.createElement('div');
+                    ember.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        width: ${randomRange(5, 15)}px;
+                        height: ${randomRange(5, 15)}px;
+                        background: radial-gradient(circle, #FFD700, #FF4500);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 9999;
+                        box-shadow: 0 0 10px #FF4500;
+                    `;
+                    document.body.appendChild(ember);
+                    
+                    // Animate ember
+                    const angle = randomRange(0, Math.PI * 2);
+                    const velocity = randomRange(200, 500);
+                    const vx = Math.cos(angle) * velocity;
+                    const vy = Math.sin(angle) * velocity;
+                    
+                    let x = 0, y = 0, opacity = 1;
+                    const animateEmber = () => {
+                        x += vx * 0.016;
+                        y += vy * 0.016 + 2; // Add gravity
+                        opacity -= 0.02;
+                        
+                        ember.style.transform = `translate(${x}px, ${y}px)`;
+                        ember.style.opacity = opacity;
+                        
+                        if (opacity > 0) {
+                            requestAnimationFrame(animateEmber);
+                        } else {
+                            ember.remove();
+                        }
+                    };
+                    
+                    animateEmber();
+                }, i * 20);
+            }
+        }
+
+        // ============================================
+        // SECTION 22: SECRET MESSAGE
+        // ============================================
+        
+        function initSecretMessage() {
+            elements.secretBtn.addEventListener('click', handleSecretClick);
+        }
+
+        function handleSecretClick() {
+            secretClickCount++;
+            
+            const remaining = CONFIG.SECRET_CLICKS_REQUIRED - secretClickCount;
+            
+            if (remaining > 0) {
+                elements.secretBtn.textContent = `🔒 Klik ${remaining}x lagi untuk pesan rahasia`;
+                
+                // Add click effect
+                elements.secretBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    elements.secretBtn.style.transform = 'scale(1)';
+                }, 100);
+            } else {
+                revealSecretMessage();
+            }
+        }
+
+        function revealSecretMessage() {
+            elements.secretBtn.style.display = 'none';
+            elements.secretMessage.classList.add('revealed');
+            
+            // Play reveal sound
+            playRevealSound();
+            
+            // Trigger celebration
+            createCelebrationEmbers();
+        }
+
+        function playRevealSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create a pleasant reveal sound
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                
+                notes.forEach((freq, index) => {
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(0, audioCtx.currentTime + index * 0.1);
+                    gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + index * 0.1 + 0.05);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + index * 0.1 + 0.3);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    
+                    oscillator.start(audioCtx.currentTime + index * 0.1);
+                    oscillator.stop(audioCtx.currentTime + index * 0.1 + 0.3);
+                });
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        function createCelebrationEmbers() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const ember = document.createElement('div');
+                    const startX = randomRange(0, window.innerWidth);
+                    
+                    ember.style.cssText = `
+                        position: fixed;
+                        top: 100%;
+                        left: ${startX}px;
+                        width: ${randomRange(5, 12)}px;
+                        height: ${randomRange(5, 12)}px;
+                        background: radial-gradient(circle, #FFD700, #FF4500);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 9999;
+                        box-shadow: 0 0 15px #FF4500;
+                    `;
+                    document.body.appendChild(ember);
+                    
+                    let y = 0;
+                    let vy = randomRange(-15, -25);
+                    let vx = randomRange(-3, 3);
+                    let opacity = 1;
+                    
+                    const animateEmber = () => {
+                        vy += 0.3; // Gravity
+                        y += vy;
+                        
+                        ember.style.transform = `translateY(${y}px) translateX(${vx * y * 0.1}px)`;
+                        opacity -= 0.01;
+                        ember.style.opacity = opacity;
+                        
+                        if (opacity > 0 && y < 200) {
+                            requestAnimationFrame(animateEmber);
+                        } else {
+                            ember.remove();
+                        }
+                    };
+                    
+                    animateEmber();
+                }, i * 30);
+            }
+        }
+
+        // ============================================
+        // SECTION 23: RESTART BUTTON
+        // ============================================
+        
+        function initRestartButton() {
+            elements.restartBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // ============================================
+        // SECTION 24: RANDOM LIGHTNING
+        // ============================================
+        
+        function initRandomLightning() {
+            setInterval(() => {
+                if (Math.random() < 0.1) { // 10% chance every interval
+                    triggerLightningFlash();
+                }
+            }, 15000); // Check every 15 seconds
+        }
+
+        // ============================================
+        // SECTION 25: KEYBOARD SHORTCUTS
+        // ============================================
+        
+        function initKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                switch(e.key.toLowerCase()) {
+                    case 'r':
+                        if (e.ctrlKey || e.metaKey) return; // Don't interfere with refresh
+                        toggleRageMode();
+                        break;
+                    case 'b':
+                        triggerBangkitEffect();
+                        break;
+                    case 's':
+                        triggerScreenShake();
+                        break;
+                    case 'l':
+                        triggerLightningFlash();
+                        break;
+                    case 'arrowup':
+                        e.preventDefault();
+                        window.scrollBy({ top: -100, behavior: 'smooth' });
+                        break;
+                    case 'arrowdown':
+                        e.preventDefault();
+                        window.scrollBy({ top: 100, behavior: 'smooth' });
+                        break;
+                    case 'home':
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        break;
+                    case 'end':
+                        e.preventDefault();
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                        break;
+                }
+            });
+        }
+
+        // ============================================
+        // SECTION 26: KONAMI CODE EASTER EGG
+        // ============================================
+        
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        function initKonamiCode() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === konamiCode[konamiIndex]) {
+                    konamiIndex++;
+                    if (konamiIndex === konamiCode.length) {
+                        activateKonamiEasterEgg();
+                        konamiIndex = 0;
+                    }
+                } else {
+                    konamiIndex = 0;
+                }
+            });
+        }
+
+        function activateKonamiEasterEgg() {
+            // Super epic mode!
+            triggerLightningFlash();
+            setTimeout(() => triggerScreenShake(), 100);
+            setTimeout(() => toggleRageMode(), 200);
+            
+            // Show special message
+            const easterEgg = document.createElement('div');
+            easterEgg.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 100000;
+                animation: fadeIn 0.5s ease;
+            `;
+            easterEgg.innerHTML = `
+                <div style="font-size: 5rem; margin-bottom: 20px;">🎮🔥⚔️🔥🎮</div>
+                <div style="font-family: Impact, sans-serif; font-size: 3rem; color: #FFD700; text-shadow: 0 0 30px #FF4500; text-align: center;">
+                    KONAMI CODE ACTIVATED!<br>
+                    <span style="font-size: 2rem; color: #FF4500;">GALANG ULTIMATE MODE</span>
+                </div>
+                <div style="font-size: 1.5rem; color: #888; margin-top: 20px;">Klik untuk menutup</div>
+            `;
+            
+            easterEgg.addEventListener('click', () => {
+                easterEgg.style.animation = 'fadeOut 0.5s ease forwards';
+                setTimeout(() => easterEgg.remove(), 500);
+            });
+            
+            document.body.appendChild(easterEgg);
+            
+            // Play epic sound
+            playEpicSound();
+        }
+
+        function playEpicSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Epic chord
+                const frequencies = [130.81, 164.81, 196.00, 261.63]; // C3, E3, G3, C4
+                
+                frequencies.forEach((freq, index) => {
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 2);
+                });
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // ============================================
+        // SECTION 27: MOUSE GLOW EFFECT
+        // ============================================
+        
+        function initMouseGlowEffect() {
+            const glow = document.createElement('div');
+            glow.style.cssText = `
+                position: fixed;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(255, 69, 0, 0.15) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 0;
+                transform: translate(-50%, -50%);
+                transition: opacity 0.3s ease;
+            `;
+            document.body.appendChild(glow);
+
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top = e.clientY + 'px';
+            });
+
+            document.addEventListener('mouseleave', () => {
+                glow.style.opacity = '0';
+            });
+
+            document.addEventListener('mouseenter', () => {
+                glow.style.opacity = '1';
+            });
+        }
+
+        // ============================================
+        // SECTION 28: VISIBILITY CHANGE HANDLER
+        // ============================================
+        
+        function initVisibilityHandler() {
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    document.title = '🔥 GALANG, Come Back! 🔥';
+                } else {
+                    document.title = 'GALANG - The Fire Never Dies 🔥';
+                }
+            });
+        }
+
+        // ============================================
+        // SECTION 29: WINDOW RESIZE HANDLER
+        // ============================================
+        
+        function initResizeHandler() {
+            let fireAnim, emberAnim, mouseFireAnim, ashAnim;
+
+            window.addEventListener('resize', debounce(() => {
+                if (fireAnim) fireAnim.resize();
+                if (emberAnim) emberAnim.resize();
+                if (mouseFireAnim) mouseFireAnim.resize();
+                if (ashAnim) ashAnim.resize();
+            }, 250));
+        }
+
+        // ============================================
+        // SECTION 30: DOUBLE CLICK EFFECT
+        // ============================================
+        
+        function initDoubleClickEffect() {
+            document.addEventListener('dblclick', (e) => {
+                createClickExplosion(e.clientX, e.clientY);
+            });
+        }
+
+        function createClickExplosion(x, y) {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                const angle = (i / 20) * Math.PI * 2;
+                const velocity = randomRange(50, 150);
+                
+                particle.style.cssText = `
+                    position: fixed;
+                    left: ${x}px;
+                    top: ${y}px;
+                    width: 8px;
+                    height: 8px;
+                    background: radial-gradient(circle, #FFD700, #FF4500);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    box-shadow: 0 0 10px #FF4500;
+                `;
+                
+                document.body.appendChild(particle);
+                
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                let px = 0, py = 0, opacity = 1;
+                
+                const animate = () => {
+                    px += vx * 0.016;
+                    py += vy * 0.016;
+                    opacity -= 0.02;
+                    
+                    particle.style.transform = `translate(${px}px, ${py}px)`;
+                    particle.style.opacity = opacity;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                
+                animate();
+            }
+            
+            // Play click sound
+            playClickSound();
+        }
+
+        function playClickSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
+                
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // ============================================
+        // SECTION 31: MOTIVATIONAL QUOTES ROTATION
+        // ============================================
+        
+        const motivationalQuotes = [
+            "GALANG, kamu adalah api yang tidak bisa dipadamkan!",
+            "Setiap detik adalah kesempatan untuk menjadi lebih baik!",
+            "Jangan pernah meragukan kekuatanmu, GALANG!",
+            "Kamu lebih kuat dari semua rintanganmu!",
+            "Api dalam dirimu adalah sumber kekuatan tak terbatas!",
+            "GALANG, dunia menunggu untuk melihat kehebatanmu!",
+            "Tidak ada yang mustahil bagi mereka yang tidak menyerah!",
+            "Kamu adalah pejuang sejati, GALANG!",
+            "Setiap jatuh adalah langkah menuju kebangkitan!",
+            "Api semangatmu akan menerangi jalanmu!"
+        ];
+
+        function initQuoteRotation() {
+            // Show random quote notification periodically
+            setInterval(() => {
+                if (Math.random() < 0.3 && !document.hidden) { // 30% chance
+                    showQuoteNotification();
+                }
+            }, 60000); // Every minute
+        }
+
+        function showQuoteNotification() {
+            const quote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                max-width: 350px;
+                padding: 20px 25px;
+                background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(50, 0, 0, 0.95));
+                border: 2px solid #FF4500;
+                border-radius: 15px;
+                color: white;
+                font-size: 1rem;
+                z-index: 10000;
+                box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+                transform: translateX(400px);
+                transition: transform 0.5s ease;
+            `;
+            notification.innerHTML = `
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">🔥</div>
+                <div>${quote}</div>
+                <button style="
+                    margin-top: 15px;
+                    padding: 8px 20px;
+                    background: transparent;
+                    border: 1px solid #FF4500;
+                    color: #FF4500;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    transition: all 0.3s ease;
+                " onclick="this.parentElement.remove()">Tutup</button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Auto remove after 10 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => notification.remove(), 500);
+                }
+            }, 10000);
+        }
+
+        // ============================================
+        // SECTION 32: SCROLL-TRIGGERED SOUNDS
+        // ============================================
+        
+        let lastScrollTop = 0;
+        let scrollSoundCooldown = false;
+
+        function initScrollSounds() {
+            window.addEventListener('scroll', throttle(() => {
+                const scrollTop = window.scrollY;
+                const scrollDelta = Math.abs(scrollTop - lastScrollTop);
+                
+                if (scrollDelta > 500 && !scrollSoundCooldown) {
+                    playScrollSound();
+                    scrollSoundCooldown = true;
+                    setTimeout(() => scrollSoundCooldown = false, 2000);
+                }
+                
+                lastScrollTop = scrollTop;
+            }, 100));
+        }
+
+        function playScrollSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            } catch (e) {
+                // Silent fail
+            }
+        }
+
+        // ============================================
+        // SECTION 33: AUTO-SAVE SCROLL POSITION
+        // ============================================
+        
+        function initScrollPositionSave() {
+            // Restore scroll position
+            const savedPosition = localStorage.getItem('galang_scroll_position');
+            if (savedPosition) {
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(savedPosition));
+                }, 100);
+            }
+
+            // Save scroll position
+            window.addEventListener('beforeunload', () => {
+                localStorage.setItem('galang_scroll_position', window.scrollY.toString());
+            });
+        }
+
+        // ============================================
+        // SECTION 34: PERFORMANCE MONITORING
+        // ============================================
+        
+        function initPerformanceMonitoring() {
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            function checkPerformance() {
+                frameCount++;
+                const currentTime = performance.now();
+                
+                if (currentTime - lastTime >= 1000) {
+                    const fps = frameCount;
+                    frameCount = 0;
+                    lastTime = currentTime;
+                    
+                    // If FPS is too low, reduce particle count
+                    if (fps < 30) {
+                        console.log('Low FPS detected, optimizing...');
+                        reduceParticles();
+                    }
+                }
+                
+                requestAnimationFrame(checkPerformance);
+            }
+            
+            checkPerformance();
+        }
+
+        function reduceParticles() {
+            // Remove some particles to improve performance
+            const embers = elements.emberContainer.querySelectorAll('.ember');
+            const ashes = elements.ashContainer.querySelectorAll('.ash');
+            
+            for (let i = 0; i < embers.length / 2; i++) {
+                if (embers[i]) embers[i].remove();
+            }
+            
+            for (let i = 0; i < ashes.length / 2; i++) {
+                if (ashes[i]) ashes[i].remove();
+            }
+        }
+
+        // ============================================
+        // SECTION 35: TOUCH SUPPORT FOR MOBILE
+        // ============================================
+        
+        function initTouchSupport() {
+            let touchStartY = 0;
+            
+            document.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            document.addEventListener('touchend', (e) => {
+                const touchEndY = e.changedTouches[0].clientY;
+                const diff = touchStartY - touchEndY;
+                
+                // Swipe up - show notification
+                if (diff > 100) {
+                    showQuoteNotification();
+                }
+                
+                // Swipe down - trigger effect
+                if (diff < -100) {
+                    triggerBangkitEffect();
+                }
+            }, { passive: true });
+            
+            // Long press for rage mode
+            let longPressTimer;
+            
+            document.addEventListener('touchstart', (e) => {
+                longPressTimer = setTimeout(() => {
+                    toggleRageMode();
+                    navigator.vibrate && navigator.vibrate(200);
+                }, 1000);
+            }, { passive: true });
+            
+            document.addEventListener('touchend', () => {
+                clearTimeout(longPressTimer);
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', () => {
+                clearTimeout(longPressTimer);
+            }, { passive: true });
+        }
+
+        // ============================================
+        // SECTION 36: ACCESSIBILITY FEATURES
+        // ============================================
+        
+        function initAccessibility() {
+            // Add skip to content link
+            const skipLink = document.createElement('a');
+            skipLink.href = '#hero-section';
+            skipLink.textContent = 'Skip to main content';
+            skipLink.style.cssText = `
+                position: fixed;
+                top: -100px;
+                left: 10px;
+                padding: 10px 20px;
+                background: #FF4500;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                z-index: 100001;
+                transition: top 0.3s ease;
+            `;
+            skipLink.addEventListener('focus', () => {
+                skipLink.style.top = '10px';
+            });
+            skipLink.addEventListener('blur', () => {
+                skipLink.style.top = '-100px';
+            });
+            document.body.prepend(skipLink);
+
+            // Ensure proper focus outlines
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+            
+            document.addEventListener('mousedown', () => {
+                document.body.classList.remove('keyboard-navigation');
+            });
+        }
+
+        // ============================================
+        // SECTION 37: DYNAMIC META UPDATES
+        // ============================================
+        
+        function initDynamicMeta() {
+            // Update meta description based on scroll position
+            const metaDescription = document.querySelector('meta[name="description"]');
+            if (!metaDescription) {
+                const meta = document.createElement('meta');
+                meta.name = 'description';
+                meta.content = 'Website motivasi personal untuk GALANG - The Fire Never Dies 🔥';
+                document.head.appendChild(meta);
+            }
+
+            // Add theme-color meta
+            const themeColor = document.createElement('meta');
+            themeColor.name = 'theme-color';
+            themeColor.content = '#FF4500';
+            document.head.appendChild(themeColor);
+        }
+
+        // ============================================
+        // SECTION 38: CONSOLE EASTER EGG
+        // ============================================
+        
+        function initConsoleEasterEgg() {
+            console.log('%c🔥 GALANG - THE FIRE NEVER DIES 🔥', 'font-size: 30px; font-weight: bold; color: #FF4500; text-shadow: 2px 2px 4px #000;');
+            console.log('%cKamu menemukan easter egg di console!', 'font-size: 16px; color: #FFD700;');
+            console.log('%cGALANG, kamu adalah pejuang sejati yang tidak kenal menyerah!', 'font-size: 14px; color: #FFA500;');
+            console.log('%c⚔️ Teruslah berjuang! ⚔️', 'font-size: 18px; color: #DC143C;');
+        }
+
+        // ============================================
+        // SECTION 39: PRINT STYLES
+        // ============================================
+        
+        function initPrintSupport() {
+            const printStyles = document.createElement('style');
+            printStyles.textContent = `
+                @media print {
+                    #fire-canvas, #particle-canvas, #mouse-fire-canvas, #ash-canvas,
+                    .ember-container, .ash-container, .smoke-container,
+                    .lightning-overlay, .rage-overlay, .floating-nav,
+                    .scroll-progress, #loading-screen, .scroll-indicator,
+                    .audio-visualizer, .interactive-buttons, .secret-container,
+                    .restart-button {
+                        display: none !important;
+                    }
+                    
+                    body {
+                        background: white !important;
+                        color: black !important;
+                    }
+                    
+                    .main-content {
+                        position: static !important;
+                    }
+                    
+                    section {
+                        background: white !important;
+                        page-break-inside: avoid;
+                    }
+                    
+                    h1, h2, h3 {
+                        color: #8B0000 !important;
+                        text-shadow: none !important;
+                    }
+                    
+                    p {
+                        color: black !important;
+                    }
+                }
+            `;
+            document.head.appendChild(printStyles);
+        }
+
+        // ============================================
+        // SECTION 40: INITIALIZE ALL ANIMATIONS
+        // ============================================
+        
+        function initAllAnimations() {
+            // Initialize canvas animations
+            const fireAnimation = new FireAnimation(elements.fireCanvas);
+            const emberAnimation = new EmberAnimation(elements.particleCanvas);
+            const mouseFireAnimation = new MouseFireAnimation(elements.mouseFireCanvas);
+            const ashAnimation = new AshAnimation(elements.ashCanvas);
+
+            // Start canvas animations
+            fireAnimation.animate();
+            emberAnimation.animate();
+            mouseFireAnimation.animate();
+            ashAnimation.animate();
+
+            // Initialize HTML particles
+            createHTMLEmbers();
+            createHTMLAsh();
+            createSmokeParticles();
+
+            // Initialize scroll effects
+            window.addEventListener('scroll', throttle(() => {
+                updateScrollProgress();
+                handleScrollReveal();
+                handleParallax();
+            }, 16));
+
+            // Initial scroll reveal check
+            handleScrollReveal();
+
+            // Initialize all features
+            initNavigation();
+            initTypingAnimation();
+            initHeartbeatCounter();
+            initCounterAnimation();
+            initRageMode();
+            initScreenShake();
+            initLightningFlash();
+            initBangkitButton();
+            initSecretMessage();
+            initRestartButton();
+            initRandomLightning();
+            initKeyboardShortcuts();
+            initKonamiCode();
+            initMouseGlowEffect();
+            initVisibilityHandler();
+            initResizeHandler();
+            initDoubleClickEffect();
+            initQuoteRotation();
+            initScrollSounds();
+            initScrollPositionSave();
+            initPerformanceMonitoring();
+            initTouchSupport();
+            initAccessibility();
+            initDynamicMeta();
+            initConsoleEasterEgg();
+            initPrintSupport();
+        }
+
+        // ============================================
+        // SECTION 41: DOCUMENT READY
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Prevent scroll during loading
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize loading screen
+            initLoadingScreen();
+        });
+
+        // ============================================
+        // SECTION 42: WINDOW LOAD
+        // ============================================
+        
+        window.addEventListener('load', () => {
+            // Ensure all resources are loaded
+            console.log('All resources loaded. GALANG is ready! 🔥');
+        });
+
+        // ============================================
+        // SECTION 43: ERROR HANDLING
+        // ============================================
+        
+        window.addEventListener('error', (e) => {
+            console.error('An error occurred:', e.message);
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('Unhandled promise rejection:', e.reason);
+        });
+
+        // ============================================
+        // SECTION 44: SERVICE WORKER REGISTRATION (Optional)
+        // ============================================
+        
+        // Uncomment to enable offline support
+        /*
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed:', err));
+        }
+        */
+
+        // ============================================
+        // SECTION 45: ADDITIONAL UTILITY FUNCTIONS
+        // ============================================
+        
+        // Create fire text effect
+        function createFireText(element) {
+            const text = element.textContent;
+            element.textContent = '';
+            
+            for (let char of text) {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.cssText = `
+                    display: inline-block;
+                    animation: textBurn ${randomRange(1, 2)}s ease-in-out infinite;
+                    animation-delay: ${randomRange(0, 0.5)}s;
+                `;
+                element.appendChild(span);
+            }
+        }
+
+        // Create shockwave effect
+        function createShockwave(x, y) {
+            const shockwave = document.createElement('div');
+            shockwave.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y}px;
+                width: 10px;
+                height: 10px;
+                border: 3px solid #FF4500;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                animation: shockwaveExpand 0.5s ease-out forwards;
+            `;
+            
+            document.body.appendChild(shockwave);
+            
+            setTimeout(() => shockwave.remove(), 500);
+        }
+
+        // Add shockwave animation
+        const shockwaveStyle = document.createElement('style');
+        shockwaveStyle.textContent = `
+            @keyframes shockwaveExpand {
+                0% {
+                    width: 10px;
+                    height: 10px;
+                    opacity: 1;
+                }
+                100% {
+                    width: 300px;
+                    height: 300px;
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            
+            body.keyboard-navigation *:focus {
+                outline: 3px solid #FF4500 !important;
+                outline-offset: 2px !important;
+            }
+        `;
+        document.head.appendChild(shockwaveStyle);
+
+        // ============================================
+        // SECTION 46: FINAL MESSAGE
+        // ============================================
+        
+        /*
+         * ===============================================
+         * 🔥 GALANG - THE FIRE NEVER DIES 🔥
+         * ===============================================
+         * 
+         * Website ini dibuat khusus untuk GALANG,
+         * seorang pejuang yang tidak pernah menyerah.
+         * 
+         * Ingatlah:
+         * - Setiap hari adalah kesempatan baru
+         * - Setiap tantangan adalah peluang untuk bertumbuh
+         * - Setiap kegagalan adalah pelajaran berharga
+         * - Api dalam dirimu tidak akan pernah padam
+         * 
+         * Teruslah berjuang, GALANG!
+         * Dunia menunggu untuk melihat kehebatanmu!
+         * 
+         * 🔥⚔️ THE FIRE NEVER DIES ⚔️🔥
+         * 
+         * ===============================================
+         */
+    </script>
+</body>
+</html>
