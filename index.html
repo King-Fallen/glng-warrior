@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <button onclick=" location.href='indexglg1.html'">
-Website Kedua
-</button>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALANG — The Fire Never Dies 🔥</title>
     <style>
+        .next-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #0a0000, #220000);
+    border: 2px solid #ff4400;
+    color: #ff6600;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 68, 0, 0.4);
+}
+
+.next-btn:hover {
+    background: linear-gradient(135deg, #220000, #550000);
+    color: #ffaa00;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 68, 0, 0.7);
+}
+
         /* ============================================
            FONT IMPORTS & BASE RESET
            ============================================ */
@@ -4468,6 +4488,7 @@ Website Kedua
             }
         });
     </script>
+    <a href="indexglg1.html" class="next-btn">Next Story →</a>
 </body>
 </html>
 
