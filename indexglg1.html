@@ -5227,7 +5227,29 @@
             }
         `;
         document.head.appendChild(shockwaveStyle);
+        .back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #1a0000, #330000);
+    border: 2px solid #ff4400;
+    color: #ff6600;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 68, 0, 0.4);
+}
 
+.back-btn:hover {
+    background: linear-gradient(135deg, #330000, #660000);
+    color: #ffaa00;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 68, 0, 0.7);
+}
         // ============================================
         // SECTION 46: FINAL MESSAGE
         // ============================================
@@ -5255,4 +5277,5 @@
          */
     </script>
 </body>
+    <a href="index.html" class="back-btn">← Kembali</a>
 </html>
