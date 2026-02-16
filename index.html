@@ -3468,16 +3468,23 @@
         }
 
         function toggleSound() {
-            isSoundOn = !isSoundOn;
-            const btn = document.getElementById('sound-toggle');
-            if (isSoundOn) {
-                initAudioContext();
-                btn.textContent = '🔊 SOUND ON';
-                playFireSound();
-            } else {
-                btn.textContent = '🔇 SOUND OFF';
-            }
-        }
+    isSoundOn = !isSoundOn;
+    const btn = document.getElementById('sound-toggle');
+    const music = document.getElementById('bg-music');
+
+    if (isSoundOn) {
+        initAudioContext();
+        btn.textContent = '🔊 SOUND ON';
+
+        music.volume = 0.4;
+        music.play();
+
+        playFireSound();
+    } else {
+        btn.textContent = '🔇 SOUND OFF';
+        music.pause();
+    }
+}
 
         /* ============================================
            FIRE CANVAS - BACKGROUND FIRE ANIMATION
@@ -4464,7 +4471,7 @@
         });
         
     </script>
-    <audio id="bg-music" autoplay loop>
+    <audio id="bg-music" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 <script>
